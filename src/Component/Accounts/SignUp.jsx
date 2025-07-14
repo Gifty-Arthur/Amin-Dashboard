@@ -1,65 +1,91 @@
 import React from "react";
 import bg from "../../assets/Images/Account/bg.png";
 import logo from "../../assets/Images/Account/logo.png";
+import AccountButtons from "../Buttons/AccountButtons";
 
 const SignupScreen = () => {
   return (
     <div className="relative w-full h-screen overflow-hidden">
-      {/* Background image */}
       <img
         src={bg}
         alt="Background"
         className="absolute inset-0 w-full h-full object-cover"
       />
 
-      {/* Overlay container to center the form */}
       <div className="absolute inset-0 flex items-center justify-center">
-        <div className="w-full max-w-md bg-white bg-opacity-80 p-8 rounded-md shadow-lg">
-          <div className="mb-6 text-center">
-            <img src={logo} alt="" className="text-center" />
-            <p className="text-gray-600 text-sm">
+        <div className="md:w-[495px] md:h-[832px] w-full bg-white bg-opacity-80 p-8 rounded-md shadow-lg">
+          <div className="mb-4 text-center">
+            <img
+              src={logo}
+              alt=""
+              className="mx-auto  w-20 h-20 object-contain "
+            />
+            <h2 className="font-bold text-[28px] font-roboto ">
+              Admin Sign Up
+            </h2>
+            <p className="text-gray-600 text-[18px] ">
               Create Your Account to Manage and Access the Dashboard Worldwide
             </p>
           </div>
 
           <form className="space-y-4">
+            <label
+              htmlFor="lastName"
+              className="text-sm font-medium text-gray-700"
+            >
+              First Name
+            </label>
             <input
               type="text"
-              placeholder="First Name"
-              className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full  shadow-lg px-4 py-3  border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
+            <label
+              htmlFor="lastName"
+              className="text-sm font-medium text-gray-700"
+            >
+              Last Name
+            </label>
             <input
               type="text"
-              placeholder="Last Name"
-              className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-3 shadow-lg border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
+            <label
+              htmlFor="lastName"
+              className="text-sm font-medium text-gray-700"
+            >
+              Email
+            </label>
             <input
               type="email"
-              placeholder="Email"
-              className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-3 shadow-lg border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
+            <label
+              htmlFor="lastName"
+              className="text-sm font-medium text-gray-700"
+            >
+              Password
+            </label>
             <input
               type="password"
-              placeholder="Password"
-              className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-3 shadow-lg border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
+            <label
+              htmlFor="lastName"
+              className="text-sm font-medium text-gray-700"
+            >
+              Confirm Password
+            </label>
             <input
               type="password"
               placeholder="Confirm Password"
-              className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-3 shadow-lg  border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
-
-            <button
-              type="submit"
-              className="w-full bg-blue-600 text-white py-3 rounded-md font-semibold hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
-            >
-              Sign up
-            </button>
+            <AccountButtons>Sign up</AccountButtons>
           </form>
 
           <p className="mt-6 text-center text-gray-600 text-sm">
             Already have an account?{" "}
-            <a href="#" className="text-blue-600 hover:underline">
+            <a href="#" className="text-primary hover:underline">
               Login
             </a>
           </p>
