@@ -4,7 +4,7 @@ import logo from "../../assets/Images/Account/logo.png";
 import AccountButtons from "../Buttons/AccountButtons";
 import { useNavigate, Link } from "react-router-dom";
 
-const SignIn = () => {
+const OTP = () => {
   return (
     <div>
       <div>
@@ -33,27 +33,26 @@ const SignIn = () => {
                 htmlFor="email"
                 className="text-sm font-medium text-gray-700"
               >
-                Email
+                Code
               </label>
               <input
-                id="email"
-                type="email"
-                name="email"
+                id="number"
+                type="number"
+                name="number"
+                placeholder="1234"
                 className="w-full shadow-lg px-4 mb-4 py-3 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 required
               />
             </form>
 
-            <Link to="/otp">
-              <AccountButtons onClick={() => navigate("/otp")}>
-                Reset password
-              </AccountButtons>
-            </Link>
+            <AccountButtons onClick={() => navigate("/")}>
+              Verify
+            </AccountButtons>
 
             <p className="mt-6 text-center text-gray-600 text-sm">
-              Back to homepage{" "}
-              <Link to="/login" className="text-primary hover:underline">
-                Back
+              Didnt you receive the OPT{" "}
+              <Link to="/" className="text-primary hover:underline">
+                Resend OTP
               </Link>
             </p>
           </div>
@@ -63,4 +62,4 @@ const SignIn = () => {
   );
 };
 
-export default SignIn;
+export default OTP;
