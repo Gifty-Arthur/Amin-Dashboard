@@ -7,17 +7,24 @@ import DashboardLayout from "./Component/Pages/DashboardLayout ";
 import Learners from "./Component/Pages/Learners";
 import Courses from "./Component/Pages/Courses";
 import Track from "./Component/Pages/Track";
-import ResetPassword from "./Component/Accounts/ResetPassword";
 import OTP from "./Component/Accounts/OTP";
+import AdminResetPassword from "./Component/Accounts/AdminResetPassword";
+import ForgotPassword from "./Component/Accounts/ForgotPassword";
 
 function App() {
   return (
     <Routes>
       {/* Auth pages - without sidebar */}
+
       <Route path="/signup" element={<SignUp />} />
       <Route path="/login" element={<SignIn />} />
-      <Route path="/forgot-password" element={<ResetPassword />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/otp" element={<OTP />} />
+      <Route path="/adminresetpassword" element={<AdminResetPassword />} />
+
+      <Route path="/reset-password/:token" element={<AdminResetPassword />} />
+      <Route path="/reset-password" element={<AdminResetPassword />} />
+      <Route path="/adminresetpassword" element={<AdminResetPassword />} />
 
       {/* Pages with sidebar */}
       <Route

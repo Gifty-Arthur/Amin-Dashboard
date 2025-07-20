@@ -14,7 +14,6 @@ export default defineConfig({
         target: 'https://tmp-se-projectapi.azurewebsites.net',
         changeOrigin: true,
         secure: true,
-        rewrite: (path) => path.replace(/^\/api/, '/api')
       }
     }
   }

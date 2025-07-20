@@ -1,7 +1,7 @@
-import t1 from "../../../assets/Images/home/t1.png";
-import t2 from "../../../assets/Images/home/t2.png";
-import t3 from "../../../assets/Images/home/t3.png"; // Assuming this path is correct now
-import t4 from "../../../assets/Images/home/t4.png";
+import t1 from "../../../assets/Images/home/t1.jpg";
+import t2 from "../../../assets/Images/home/t2.jpg";
+import t3 from "../../../assets/Images/home/t3.jpg"; // Assuming this path is correct now
+import t4 from "../../../assets/Images/home/t4.jpg";
 
 const tracks = [
   {

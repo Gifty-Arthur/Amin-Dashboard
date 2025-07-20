@@ -1,4 +1,8 @@
 // src/components/SummaryCards.js
+import h1 from "../../assets/Images/home/h1.png";
+import h2 from "../../assets/Images/home/h2.png";
+import h3 from "../../assets/Images/home/h3.png";
+
 const SummaryCards = () => {
   const data = [
     {
@@ -6,6 +10,7 @@ const SummaryCards = () => {
       value: "12,450",
       change: "12%",
       color: "#198559",
+      image: h1,
     },
     { label: "Revenue", value: "$12,450", change: "+15%", color: "green" },
     { label: "Invoice", value: "100", change: "+2%", color: "green" },

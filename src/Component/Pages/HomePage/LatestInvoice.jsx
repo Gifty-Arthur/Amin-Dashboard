@@ -14,8 +14,8 @@ const invoices = [
 
 const LatestInvoices = () => {
   return (
-    <div className="mt-10 h-[478px] bg-white p-6 rounded-lg shadow-md">
-      <h3 className="text-lg font-semibold mb-6 border-b border-b-gray-200 text-tert">
+    <div className="h-[478px] bg-white p-6 rounded-lg shadow-md">
+      <h3 className="text-lg font-semibold mb-4 border-b border-gray-200 pb-2 text-gray-800">
         Latest Invoice
       </h3>
       <ul className="space-y-4">
