@@ -52,30 +52,8 @@
     "courses": [],
     "ratings": [],
     "tech": ["Figma", "Sketch"]
-  },
+  }
 
-    {
-    "_id": "683077f617460c2f22653b2d",
-    "name": "UI/UX Design",
-    "price": 3500,
-    "instructor": "Teshome M.",
-    "duration": "12 weeks",
-    "image": "https://res.cloudinary.com/techbiznez/image/upload/v1748345763/image-1748345762878-941638165_oghyws.jpg",
-    "description": "Unlock your potential with comprehensive training in modern software development....",
-    "courses": [],
-    "ratings": [],
-    "tech": ["Figma", "Sketch"]
-  },
-  {
-    "_id": "683077f617460c2f22653b2d",  
-    "name": "Machine Learning", 
-    "price": 4000,  
-    "instructor": "Jane Doe", 
-    "duration": "10 weeks",  
-    "image": "https://example.com/path/to/machine-learning-image.jpg",  
-    "description": "Dive into machine learning with hands-on projects and real-world applications.",  
-    "courses": [],  
-    "ratings": [],  
-    "tech": ["Python", "TensorFlow", "Scikit-learn"]  
-}
+   
+
 ]

@@ -5,9 +5,9 @@ import Trek from "./Trek";
 
 const Track = () => {
   return (
-    <div>
+    <div className="">
       <Title text="Manage Tracks" />
-      <Subt text="hiii" />
+      <Subt text="Filter, sort, and access detailed tracks" />
       <Trek />
     </div>
   );
