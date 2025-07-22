@@ -1,0 +1,81 @@
+[
+  {
+    "_id": "67fd04e1db1ad84c0687b468",
+    "name": "Cloud Computing Expertise",
+    "price": 350,
+    "instructor": "John Doe",
+    "duration": "12 weeks",
+    "image": "https://res.cloudinary.com/techbiznez/image/upload/v1748593248/image-1748593247833-504326900_sjbbvu.jpg",
+    "description": "Unlock your potential with comprehensive training in modern...",
+    "courses": [
+      { "_id": "67fd0554db1ad84c0687b46d", "title": "AWS Cloud Practional" }
+    ],
+    "ratings": [],
+    "tech": ["Azure", "AWS"]
+  },
+  {
+    "_id": "6829efe117460c2f2264a134",
+    "name": "Data Science Mystery",
+    "price": 350,
+    "instructor": "Tibebe Solomon",
+    "duration": "12 weeks",
+    "image": "https://res.cloudinary.com/techbiznez/image/upload/v1747578849/image-1747578842538-279969083_cmlhjq.jpg",
+    "description": "Equip yourself with the skills to analyze, interpret, and leverage data, becoming an expert.",
+    "courses": [
+      { "_id": "6829f4e117460c2f2264a15b", "title": "Data Visualization" }
+    ],
+    "ratings": [],
+    "tech": ["Python", "PowerBI"]
+  },
+  {
+    "_id": "6829f1d317460c2f2264a148",
+    "name": "Software Development",
+    "price": 400,
+    "instructor": "Melake Wubshet",
+    "duration": "12 weeks",
+    "image": "https://res.cloudinary.com/techbiznez/image/upload/v1747579347/image-1747579345670-653710284_gr6njf.jpg",
+    "description": "Equip yourself with the skills to analyze, interpret, and leverage data, becoming an expert.",
+    "courses": [
+      { "_id": "6829f61117460c2f2264a162", "title": "Developing Web Applications and Web APIs Protected by Azure Active Directory" }
+    ],
+    "ratings": [],
+    "tech": ["NodeJs", "ReactJs"]
+  },
+  {
+    "_id": "683077f617460c2f22653b2d",
+    "name": "UI/UX Design",
+    "price": 3500,
+    "instructor": "Teshome M.",
+    "duration": "12 weeks",
+    "image": "https://res.cloudinary.com/techbiznez/image/upload/v1748345763/image-1748345762878-941638165_oghyws.jpg",
+    "description": "Unlock your potential with comprehensive training in modern software development....",
+    "courses": [],
+    "ratings": [],
+    "tech": ["Figma", "Sketch"]
+  },
+
+    {
+    "_id": "683077f617460c2f22653b2d",
+    "name": "UI/UX Design",
+    "price": 3500,
+    "instructor": "Teshome M.",
+    "duration": "12 weeks",
+    "image": "https://res.cloudinary.com/techbiznez/image/upload/v1748345763/image-1748345762878-941638165_oghyws.jpg",
+    "description": "Unlock your potential with comprehensive training in modern software development....",
+    "courses": [],
+    "ratings": [],
+    "tech": ["Figma", "Sketch"]
+  },
+  {
+    "_id": "683077f617460c2f22653b2d",  
+    "name": "Machine Learning", 
+    "price": 4000,  
+    "instructor": "Jane Doe", 
+    "duration": "10 weeks",  
+    "image": "https://example.com/path/to/machine-learning-image.jpg",  
+    "description": "Dive into machine learning with hands-on projects and real-world applications.",  
+    "courses": [],  
+    "ratings": [],  
+    "tech": ["Python", "TensorFlow", "Scikit-learn"]  
+}
+]

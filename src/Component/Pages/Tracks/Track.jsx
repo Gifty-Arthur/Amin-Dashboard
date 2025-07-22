@@ -7,7 +7,7 @@ const Track = () => {
   return (
     <div>
       <Title text="Manage Tracks" />
-      <Subt text="Filter, sort, and access detailed tracks" />
+      <Subt text="hiii" />
       <Trek />
     </div>
   );
