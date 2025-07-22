@@ -1,6 +1,6 @@
 import t1 from "../../../assets/Images/home/t1.jpg";
 import t2 from "../../../assets/Images/home/t2.jpg";
-import t3 from "../../../assets/Images/home/t3.jpg"; // Assuming this path is correct now
+import t3 from "../../../assets/Images/home/t3.jpg";
 import t4 from "../../../assets/Images/home/t4.jpg";
 
 const tracks = [

@@ -1,3 +1,5 @@
+import React from "react";
+
 import { Route, Routes } from "react-router-dom";
 import SignUp from "./Component/Accounts/SignUp";
 import SignIn from "./Component/Accounts/SignIn";
@@ -6,10 +8,11 @@ import Invoices from "./Component/Pages/Invoices";
 import DashboardLayout from "./Component/Pages/DashboardLayout ";
 import Learners from "./Component/Pages/Learners";
 import Courses from "./Component/Pages/Courses";
-import Track from "./Component/Pages/Track";
+import Track from "./Component/Pages/Tracks/Track";
 import OTP from "./Component/Accounts/OTP";
 import AdminResetPassword from "./Component/Accounts/AdminResetPassword";
 import ForgotPassword from "./Component/Accounts/ForgotPassword";
+import Report from "./Component/Pages/Report/Report";
 
 function App() {
   return (
@@ -66,6 +69,15 @@ function App() {
         element={
           <DashboardLayout>
             <Courses />
+          </DashboardLayout>
+        }
+      />
+
+      <Route
+        path="/report"
+        element={
+          <DashboardLayout>
+            <Report />
           </DashboardLayout>
         }
       />

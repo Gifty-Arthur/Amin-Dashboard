@@ -67,17 +67,18 @@ const Sidebar = () => {
             }`
           }
         >
-          <FaBook /> <span>Report</span>
+          <FaBook /> <span>Courses</span>
         </NavLink>
+
         <NavLink
-          to="/courses"
+          to="/report"
           className={({ isActive }) =>
             `flex items-center space-x-2 p-2 rounded-md hover:bg-white hover:text-blue-900 ${
               isActive ? "bg-white text-blue-900" : ""
             }`
           }
         >
-          <FaBook /> <span>Courses</span>
+          <FaBook /> <span>Report</span>
         </NavLink>
       </ul>
 
