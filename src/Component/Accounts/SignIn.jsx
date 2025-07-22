@@ -66,8 +66,7 @@ const SignIn = () => {
       });
 
       // Using Vite proxy - requests to /api/* will be forwarded to the Azure API
-      const apiUrl =
-        "https://tmp-se-projectapi.azurewebsites.net/api/auth/login";
+      const apiUrl = "/api/auth/login";
 
       const response = await fetch(apiUrl, {
         method: "POST",

@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router";
 
 const Trek = () => {
   const [tracks, setTracks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate(); // <-- add this here
 
   // Sample data matching your API structure for development
   const sampleTracks = [
@@ -70,7 +72,6 @@ const Trek = () => {
       ratings: [],
     },
   ];
-
   useEffect(() => {
     // For development: using sample data to avoid CORS issues
     // Replace this with actual API call once CORS is configured
@@ -79,33 +80,10 @@ const Trek = () => {
       setTracks(sampleTracks);
       setLoading(false);
     }, 1000);
-
-    // Uncomment this when CORS is fixed:
-    /*
-    const apiUrl = 'https://cors-anywhere.herokuapp.com/https://tmp-se-projectapi.azurewebsites.net/api/tracks';
-    
-    fetch(apiUrl)
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.success && data.tracks) {
-          setTracks(data.tracks);
-        } else {
-          setTracks([]);
-        }
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error("Error fetching tracks:", err);
-        setError(err.message);
-        setLoading(false);
-      });
-    */
   }, []);
 
   const handleTrackClick = (trackId) => {
-    // Replace this with your actual navigation logic
-    console.log(`Navigate to track: ${trackId}`);
-    // For React Router: navigate(`/track/${trackId}`);
+    navigate(`/trackdetails/${trackId}`);
   };
 
   const LoadingCard = () => (

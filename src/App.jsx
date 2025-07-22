@@ -13,6 +13,7 @@ import OTP from "./Component/Accounts/OTP";
 import AdminResetPassword from "./Component/Accounts/AdminResetPassword";
 import ForgotPassword from "./Component/Accounts/ForgotPassword";
 import Report from "./Component/Pages/Report/Report";
+import TrackDetails from "./Component/Pages/Tracks/TrackDetails";
 
 function App() {
   return (
@@ -27,7 +28,6 @@ function App() {
 
       <Route path="/reset-password/:token" element={<AdminResetPassword />} />
       <Route path="/reset-password" element={<AdminResetPassword />} />
-      <Route path="/adminresetpassword" element={<AdminResetPassword />} />
 
       {/* Pages with sidebar */}
       <Route
@@ -51,6 +51,14 @@ function App() {
         element={
           <DashboardLayout>
             <Learners />
+          </DashboardLayout>
+        }
+      />
+      <Route
+        path="/trackdetails/:trackId" // <-- ADD THIS ROUTE
+        element={
+          <DashboardLayout>
+            <TrackDetails />
           </DashboardLayout>
         }
       />

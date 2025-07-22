@@ -78,20 +78,17 @@ const AdminResetPassword = () => {
     setErrors({});
 
     try {
-      const response = await fetch(
-        `https://tmp-se-projectapi.azurewebsites.net/api/auth/reset-password/${resetToken}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-          },
-          body: JSON.stringify({
-            password: newPassword,
-            confirmPassword: confirmPassword,
-          }),
-        }
-      );
+      const response = await fetch(`/api/auth/reset-password/${resetToken}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          password: newPassword,
+          confirmPassword: confirmPassword,
+        }),
+      });
 
       if (response.ok) {
         alert(

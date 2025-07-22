@@ -55,8 +55,7 @@ const ForgotPassword = () => {
         email: formData.email,
       });
 
-      const apiUrl =
-        "https://tmp-se-projectapi.azurewebsites.net/api/auth/forgot-password";
+      const apiUrl = "/api/auth/forgot-password";
       const response = await fetch(apiUrl, {
         method: "POST",
         headers: {
