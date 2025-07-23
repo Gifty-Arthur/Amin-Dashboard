@@ -16,6 +16,7 @@ import Report from "./Component/Pages/Report/Report";
 import TrackDetails from "./Component/Pages/Tracks/TrackDetails";
 import AddNewTrack from "./Component/Pages/Tracks/AddNewTrack";
 import EmailVerification from "./Component/Accounts/EmailVerification";
+import TrackListContainer from "./Component/Pages/Tracks/TrackListContainer";
 
 function App() {
   return (
@@ -84,6 +85,14 @@ function App() {
         element={
           <DashboardLayout>
             <Courses />
+          </DashboardLayout>
+        }
+      />
+      <Route
+        path="/track" // This is the route for displaying the list of tracks
+        element={
+          <DashboardLayout>
+            <TrackListContainer /> {/* <--- USE TRACKLISTCONTAINER HERE */}
           </DashboardLayout>
         }
       />

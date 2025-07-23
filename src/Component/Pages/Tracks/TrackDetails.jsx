@@ -41,7 +41,9 @@ const TrackDetails = () => {
   useEffect(() => {
     const fetchTrackDetails = async () => {
       try {
-        const response = await fetch(`/api/tracks/${trackId}`);
+        const response = await fetch(
+          `https://tmp-se-projectapi.azurewebsites.net/api/tracks/${trackId}`
+        );
 
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
@@ -102,16 +104,19 @@ const TrackDetails = () => {
     }
 
     try {
-      const response = await fetch(`/api/tracks/${trackId}/ratings`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          rating: newRating,
-          review: newReview,
-        }),
-      });
+      const response = await fetch(
+        `https://tmp-se-projectapi.azurewebsites.net/api/tracks/${trackId}/ratings`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            rating: newRating,
+            review: newReview,
+          }),
+        }
+      );
 
       if (!response.ok) {
         const errorData = await response
@@ -123,7 +128,9 @@ const TrackDetails = () => {
       }
 
       const updatedTrack = await response.json();
-      const fetchResponse = await fetch(`/api/tracks/${trackId}`);
+      const fetchResponse = await fetch(
+        `https://tmp-se-projectapi.azurewebsites.net/api/tracks/${trackId}`
+      );
       if (!fetchResponse.ok) {
         throw new Error(
           `HTTP error! status: ${fetchResponse.status} during re-fetch`
@@ -156,13 +163,16 @@ const TrackDetails = () => {
     setUpdateError(null);
 
     try {
-      const response = await fetch(`/api/tracks/${trackId}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(updateFormData),
-      });
+      const response = await fetch(
+        `https://tmp-se-projectapi.azurewebsites.net/api/tracks/${trackId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(updateFormData),
+        }
+      );
 
       if (!response.ok) {
         const errorData = await response
@@ -199,12 +209,15 @@ const TrackDetails = () => {
     setDeleteError(null);
 
     try {
-      const response = await fetch(`/api/tracks/${trackId}`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await fetch(
+        `https://tmp-se-projectapi.azurewebsites.net/api/tracks/${trackId}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       if (!response.ok) {
         const errorData = await response

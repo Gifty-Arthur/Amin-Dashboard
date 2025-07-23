@@ -4,7 +4,6 @@ import { SlCalender } from "react-icons/sl";
 import { IoPersonOutline } from "react-icons/io5";
 
 const Trek = ({ tracks }) => {
-  // Accepting tracks as a prop
   const navigate = useNavigate();
 
   const handleTrackClick = (trackId) => {

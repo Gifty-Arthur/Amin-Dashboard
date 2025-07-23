@@ -9,27 +9,28 @@ import AddNewTrack from "./AddNewTrack";
 
 // Change this component to accept 'fetchedTracks' as a prop
 const Track = ({ fetchedTracks }) => {
-  // Initialize 'tracks' state. Crucially, ensure it's always an array.
-  // If fetchedTracks is initially undefined/null, it defaults to an empty array.
-  const [tracks, setTracks] = useState(fetchedTracks || []); // <-- Key Change 1: Defensive initialization
+  // fetchedTracks will be an empty array initially from TrackListContainer
+  // Initialize 'tracks' with an empty array or the fetchedTracks if available
+  const [tracks, setTracks] = useState(fetchedTracks || []); // <--- KEY CHANGE HERE
   const [searchQuery, setSearchQuery] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Use useEffect to update 'tracks' state whenever 'fetchedTracks' prop changes.
+  // Use useEffect to update 'tracks' state if 'fetchedTracks' prop changes
   useEffect(() => {
-    // Only update if fetchedTracks is actually a valid array (or not null/undefined)
+    // Only update if fetchedTracks is not null/undefined
     if (fetchedTracks) {
+      // <--- Added a check here for robustness
       setTracks(fetchedTracks);
     }
-  }, [fetchedTracks]); // Re-run this effect when fetchedTracks prop changes
+  }, [fetchedTracks]); // Re-run effect if fetchedTracks prop changes
 
-  // Filter tracks based on the search query.
-  // Add a defensive check here to ensure 'tracks' is an array before calling filter.
-  const filteredTracks = Array.isArray(tracks) // <-- Key Change 2: Defensive check before filtering
+  // Filter tracks based on the search query
+  // Ensure 'tracks' is an array before calling filter
+  const filteredTracks = Array.isArray(tracks)
     ? tracks.filter((track) =>
         track.name.toLowerCase().includes(searchQuery.toLowerCase())
       )
-    : []; // If tracks isn't an array, default to an empty array for filtering
+    : []; // <--- Another KEY CHANGE: Defensive check
 
   // Function to open the modal
   const openModal = () => {
@@ -70,7 +71,7 @@ const Track = ({ fetchedTracks }) => {
       <AddNewTrack
         isOpen={isModalOpen}
         onClose={closeModal}
-        onAddTrack={handleAddTrack}
+        onAddTrack={handleAddTrack} // Pass the function to add a new track
       />
     </div>
   );

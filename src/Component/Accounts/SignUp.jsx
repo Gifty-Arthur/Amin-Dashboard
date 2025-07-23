@@ -16,6 +16,7 @@ const SignUp = () => {
   });
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+  const [successMessage, setSuccessMessage] = useState(""); // State for success message
 
   // Handle input changes
   const handleChange = (e) => {
@@ -31,6 +32,8 @@ const SignUp = () => {
         [name]: "",
       }));
     }
+    // Clear success message when user starts typing again
+    setSuccessMessage("");
   };
 
   // Validate form data
@@ -82,13 +85,15 @@ const SignUp = () => {
 
   // Handle form submission
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault(); // Prevent default form submission
 
     if (!validateForm()) {
       return;
     }
 
     setIsLoading(true);
+    setErrors({}); // Clear previous errors
+    setSuccessMessage(""); // Clear previous success messages
 
     try {
       console.log("Sending signup request with data:", {
@@ -96,10 +101,12 @@ const SignUp = () => {
         lastName: formData.lastName,
         email: formData.email,
         password: formData.password,
+        // Note: contact and confirmPassword are sent, but password and confirmPassword
+        // are typically handled by backend validation for security.
       });
 
       // Using Vite proxy - requests to /api/* will be forwarded to the Azure API
-      const apiUrl = "/api/auth/signup/admin";
+      const apiUrl = "/api/auth/signup/admin"; // This is the correct endpoint
 
       const response = await fetch(apiUrl, {
         method: "POST",
@@ -107,7 +114,7 @@ const SignUp = () => {
           "Content-Type": "application/json",
           Accept: "application/json",
         },
-        mode: "cors",
+        mode: "cors", // Ensure CORS is handled correctly by your proxy/backend
         body: JSON.stringify({
           firstName: formData.firstName,
           lastName: formData.lastName,
@@ -134,10 +141,29 @@ const SignUp = () => {
       }
 
       if (response.ok) {
-        // Success - redirect to login or dashboard
+        // Success - inform user to check email
         console.log("Sign up successful:", data);
-        alert("Account created successfully! Please login.");
-        navigate("/login");
+        setSuccessMessage(
+          "Account created successfully! Please check your email to verify your account before logging in."
+        );
+        // Store email for OTP verification in localStorage
+        // Using 'verificationEmail' to distinguish from 'resetEmail' used in OTP component
+        localStorage.setItem("verificationEmail", formData.email);
+
+        // Optionally, reset form fields after successful signup
+        setFormData({
+          firstName: "",
+          lastName: "",
+          email: "",
+          contact: "",
+          password: "",
+          confirmPassword: "",
+        });
+
+        // Redirect to OTP page after a short delay to allow user to read message
+        setTimeout(() => {
+          navigate("/otp");
+        }, 3000); // Redirect after 3 seconds
       } else {
         // Handle API errors - show detailed error for debugging
         console.error("API Error:", data);
@@ -150,11 +176,9 @@ const SignUp = () => {
         } else if (data.error) {
           errorMessage += data.error;
         } else if (data.errors && Array.isArray(data.errors)) {
-          // Handle validation errors array
           console.log("Validation errors:", data.errors);
           errorMessage += "Validation errors: " + data.errors.join(", ");
         } else if (data.errors && typeof data.errors === "object") {
-          // Handle validation errors object
           console.log("Validation errors object:", data.errors);
           errorMessage +=
             "Validation errors: " + Object.values(data.errors).join(", ");
@@ -169,7 +193,6 @@ const SignUp = () => {
     } catch (error) {
       console.error("Sign up error details:", error);
 
-      // More specific error handling
       if (error.name === "TypeError" && error.message.includes("fetch")) {
         setErrors({
           submit:
@@ -214,6 +237,13 @@ const SignUp = () => {
           {errors.submit && (
             <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
               {errors.submit}
+            </div>
+          )}
+
+          {/* Display success message */}
+          {successMessage && (
+            <div className="mb-4 p-3 bg-green-100 border border-green-400 text-green-700 rounded">
+              {successMessage}
             </div>
           )}
 
@@ -365,9 +395,9 @@ const SignUp = () => {
             </div>
 
             <AccountButtons
-              type="submit"
+              type="submit" // Correctly set to submit
               disabled={isLoading}
-              onClick={handleSubmit}
+              // Removed redundant onClick={handleSubmit} as type="submit" on button inside form handles it
             >
               {isLoading ? "Signing up..." : "Sign up"}
             </AccountButtons>
