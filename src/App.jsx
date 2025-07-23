@@ -14,6 +14,8 @@ import AdminResetPassword from "./Component/Accounts/AdminResetPassword";
 import ForgotPassword from "./Component/Accounts/ForgotPassword";
 import Report from "./Component/Pages/Report/Report";
 import TrackDetails from "./Component/Pages/Tracks/TrackDetails";
+import AddNewTrack from "./Component/Pages/Tracks/AddNewTrack";
+import EmailVerification from "./Component/Accounts/EmailVerification";
 
 function App() {
   return (
@@ -28,6 +30,11 @@ function App() {
 
       <Route path="/reset-password/:token" element={<AdminResetPassword />} />
       <Route path="/reset-password" element={<AdminResetPassword />} />
+      <Route path="/add-new-track" element={<AddNewTrack />} />
+      <Route
+        path="/email-verification/:token"
+        element={<EmailVerification />}
+      />
 
       {/* Pages with sidebar */}
       <Route
