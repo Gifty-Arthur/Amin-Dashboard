@@ -10,25 +10,30 @@ const OTP = () => {
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false); // Used for success message display
-  const [resendMessage, setResendMessage] = useState(""); // New state for resend message
+  const [resendMessage, setResendMessage] = useState(""); // State for resend message
+  const [verificationEmail, setVerificationEmail] = useState(""); // State to store the email
 
   useEffect(() => {
     // Retrieve the email stored by the SignUp component
-    const email = localStorage.getItem("verificationEmail");
-    if (!email) {
+    const emailFromStorage = localStorage.getItem("verificationEmail");
+    if (emailFromStorage) {
+      setVerificationEmail(emailFromStorage);
+    } else {
       // If no email is found, it means the user didn't come from signup or reset flow correctly.
       // You might want to show a more user-friendly message or redirect.
       console.warn(
         "No verification email found in localStorage for OTP verification. Redirecting to signup."
       );
       // Optionally, navigate them back to signup if this OTP page is strictly for signup verification
-      // navigate("/signup");
+      // navigate("/signup"); // Uncomment if you want to force redirect
     }
-  }, [navigate]);
+  }, [navigate]); // navigate is a dependency because it's used inside useEffect
 
   // Handle input changes
   const handleChange = (e) => {
-    setOtp(e.target.value);
+    // Allow only digits and limit to 6 characters
+    const value = e.target.value.replace(/\D/g, "").slice(0, 6); // <--- Added to ensure only digits and max 6
+    setOtp(value);
     // Clear error when user starts typing
     if (errors.otp) {
       setErrors({ ...errors, otp: "" });
@@ -42,9 +47,9 @@ const OTP = () => {
     const newErrors = {};
     if (!otp.trim()) {
       newErrors.otp = "OTP is required";
-    } else if (otp.length !== 4) {
-      // Assuming OTP is always 4 digits
-      newErrors.otp = "OTP must be 4 digits";
+    } else if (otp.length !== 6) {
+      // <--- KEY CHANGE: Expect 6 digits
+      newErrors.otp = "OTP must be 6 digits";
     }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -57,14 +62,20 @@ const OTP = () => {
       return;
     }
 
+    // Ensure email is available before proceeding
+    if (!verificationEmail) {
+      setErrors({
+        otp: "Email not found for verification. Please try signing up again.",
+      });
+      return;
+    }
+
     setIsLoading(true);
     setErrors({}); // Clear previous errors
     setIsSuccess(false); // Clear previous success state
     setResendMessage(""); // Clear resend message
 
     try {
-      // For email verification after signup, the backend might only need the token.
-      // Based on your input: `{"token": "144234"}`, it only needs the token.
       const apiUrl =
         "https://tmp-se-projectapi.azurewebsites.net/api/auth/verify-email";
 
@@ -75,12 +86,14 @@ const OTP = () => {
           Accept: "application/json",
         },
         body: JSON.stringify({
-          token: otp, // Send OTP under the 'token' key as per backend expectation
+          email: verificationEmail, // Include email in the payload
+          token: otp, // Send OTP under the 'token' key
         }),
       });
 
+      console.log("OTP verification response status:", response.status);
       const data = await response.json();
-      console.log("OTP verification response:", data);
+      console.log("OTP verification response data:", data);
 
       if (response.ok) {
         setIsSuccess(true);
@@ -93,12 +106,16 @@ const OTP = () => {
           navigate("/login");
         }, 2000); // Redirect after 2 seconds
       } else {
-        setErrors({ otp: data.message || "Failed to verify OTP." });
+        // Log full error for debugging
+        console.error("OTP verification failed:", data);
+        setErrors({
+          otp: data.message || "Failed to verify OTP. Please try again.",
+        });
       }
     } catch (error) {
       console.error("Error verifying OTP:", error);
       setErrors({
-        otp: "An error occurred while verifying OTP. Please try again.",
+        otp: "An error occurred while verifying OTP. Please check your connection and try again.",
       });
     } finally {
       setIsLoading(false);
@@ -131,17 +148,24 @@ const OTP = () => {
         body: JSON.stringify({ email }), // Send the email to resend token
       });
 
+      console.log("Resend OTP response status:", response.status);
+      const data = await response.json();
+      console.log("Resend OTP response data:", data);
+
       if (response.ok) {
         console.log("OTP resent successfully.");
         setResendMessage("New OTP sent! Please check your email."); // Display success message for resend
       } else {
-        const errorData = await response.json();
-        setErrors({ otp: errorData.message || "Failed to resend OTP." });
+        // Log full error for debugging
+        console.error("Resend OTP failed:", data);
+        setErrors({
+          otp: data.message || "Failed to resend OTP. Please try again.",
+        });
       }
     } catch (error) {
       console.error("Error resending OTP:", error);
       setErrors({
-        otp: "An error occurred while resending OTP. Please try again.",
+        otp: "An error occurred while resending OTP. Please check your connection and try again.",
       });
     } finally {
       setIsLoading(false);
@@ -202,13 +226,14 @@ const OTP = () => {
               </label>
               <input
                 id="otp"
-                type="number"
+                type="number" // Still type="number" for numeric keyboard on mobile
                 name="otp"
                 value={otp}
                 onChange={handleChange}
-                placeholder="1234"
+                placeholder="123456" // Updated placeholder
                 className="w-full shadow-lg px-4 mb-4 py-3 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 required
+                maxLength={6} // <--- Added maxLength
               />
             </div>
             <AccountButtons type="submit" disabled={isLoading}>
