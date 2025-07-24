@@ -18,7 +18,8 @@ const Trek = () => {
         // Call the service function to get the data
         const data = await getAllTracks();
         // The API returns an object with a 'tracks' array inside it
-        setTracks(data.tracks);
+        // Correct
+        setTracks(data);
       } catch (error) {
         // The service function now handles the detailed logging
         console.error("Failed to display tracks:", error);

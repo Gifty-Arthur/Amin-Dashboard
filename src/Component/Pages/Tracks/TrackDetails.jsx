@@ -1,26 +1,37 @@
 import React, { useEffect, useState } from "react";
-import { useParams, Link, useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
+import {
+  getTrackById,
+  addRating,
+  updateTrack,
+  deleteTrack,
+} from "./TrackService.jsx";
+
+// Your Icon Imports
 import { LuPencil } from "react-icons/lu";
 import { SlCalender } from "react-icons/sl";
 import { IoPersonOutline } from "react-icons/io5";
-import { CiStar } from "react-icons/ci";
 import { FaStar } from "react-icons/fa";
 import { RiDeleteBin6Line } from "react-icons/ri";
 
 const TrackDetails = () => {
   const { trackId } = useParams();
   const navigate = useNavigate();
+
+  // --- STATE DEFINITIONS ---
   const [track, setTrack] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // State for creating a new rating
   const [newRating, setNewRating] = useState(0);
   const [newReview, setNewReview] = useState("");
+  const [newTitle, setNewTitle] = useState("");
   const [submittingRating, setSubmittingRating] = useState(false);
   const [ratingError, setRatingError] = useState(null);
   const [ratingSuccess, setRatingSuccess] = useState(false);
 
-  // Update modal states
+  // State for the update modal
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [updateFormData, setUpdateFormData] = useState({
     name: "",
@@ -28,521 +39,413 @@ const TrackDetails = () => {
     duration: "",
     price: "",
     description: "",
-    image: "",
   });
+  const [imageFile, setImageFile] = useState(null);
   const [updating, setUpdating] = useState(false);
   const [updateError, setUpdateError] = useState(null);
 
-  // Delete confirmation states
+  // State for the delete modal
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState(null);
 
+  // --- DATA FETCHING & LOGIC ---
   useEffect(() => {
     const fetchTrackDetails = async () => {
       try {
-        const response = await fetch(
-          `https://tmp-se-projectapi.azurewebsites.net/api/tracks/${trackId}`
-        );
-
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const data = await response.json();
-
-        if (data.track) {
-          setTrack(data.track);
-        } else if (data.data) {
-          setTrack(data.data);
-        } else {
-          setTrack(data);
-        }
+        setLoading(true);
+        const trackData = await getTrackById(trackId);
+        setTrack(trackData);
+        setUpdateFormData({
+          name: trackData.name || "",
+          instructor: trackData.instructor || "",
+          duration: trackData.duration || "",
+          price: trackData.price || "",
+          description: trackData.description || "",
+        });
       } catch (err) {
-        setError("Could not load track details. " + err.message);
+        setError("Could not load track details.");
+        console.error(err);
       } finally {
         setLoading(false);
       }
     };
-
     fetchTrackDetails();
   }, [trackId]);
 
-  // Initialize update form when track is loaded
-  useEffect(() => {
-    if (track) {
-      setUpdateFormData({
-        name: track.name || "",
-        instructor: track.instructor || "",
-        duration: track.duration || "",
-        price: track.price || "",
-        description: track.description || "",
-        image: track.image || "",
-      });
-    }
-  }, [track]);
-
-  // Function to calculate average rating
-  const calculateAverageRating = (ratings) => {
-    if (!ratings || ratings.length === 0) {
-      return 0;
-    }
-    const totalRating = ratings.reduce((sum, r) => sum + r.rating, 0);
-    return (totalRating / ratings.length).toFixed(1);
-  };
-
   const handleRatingSubmit = async (e) => {
     e.preventDefault();
-    setSubmittingRating(true);
-    setRatingError(null);
-    setRatingSuccess(false);
-
     if (newRating === 0) {
       setRatingError("Please select a star rating.");
-      setSubmittingRating(false);
       return;
     }
-
+    if (!newTitle.trim()) {
+      setRatingError("Please enter a title for your review.");
+      return;
+    }
+    if (newReview.trim() && newReview.trim().length < 10) {
+      setRatingError("Review must be at least 10 characters long.");
+      return;
+    }
+    setSubmittingRating(true);
+    setRatingError(null);
     try {
-      const response = await fetch(
-        `https://tmp-se-projectapi.azurewebsites.net/api/tracks/${trackId}/ratings`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            rating: newRating,
-            review: newReview,
-          }),
-        }
-      );
-
-      if (!response.ok) {
-        const errorData = await response
-          .json()
-          .catch(() => ({ message: "Failed to parse error response." }));
-        throw new Error(
-          errorData.message || `HTTP error! status: ${response.status}`
-        );
-      }
-
-      const updatedTrack = await response.json();
-      const fetchResponse = await fetch(
-        `https://tmp-se-projectapi.azurewebsites.net/api/tracks/${trackId}`
-      );
-      if (!fetchResponse.ok) {
-        throw new Error(
-          `HTTP error! status: ${fetchResponse.status} during re-fetch`
-        );
-      }
-      const fetchedData = await fetchResponse.json();
-      if (fetchedData.track) {
-        setTrack(fetchedData.track);
-      } else if (fetchedData.data) {
-        setTrack(fetchedData.data);
-      } else {
-        setTrack(fetchedData);
-      }
-
-      setRatingSuccess(true);
+      const updatedTrack = await addRating(trackId, {
+        title: newTitle,
+        rating: newRating,
+        review: newReview.trim(),
+      });
+      setTrack(updatedTrack);
       setNewRating(0);
       setNewReview("");
+      setNewTitle("");
+      setRatingSuccess(true);
       setTimeout(() => setRatingSuccess(false), 3000);
     } catch (err) {
-      setRatingError("Failed to submit rating: " + err.message);
+      const errorMessage =
+        err.response?.data?.error || "Failed to submit rating.";
+      setRatingError(errorMessage);
+      console.error(err);
     } finally {
       setSubmittingRating(false);
-    }
-  };
-
-  // Handle track update
-  const handleUpdateSubmit = async (e) => {
-    e.preventDefault();
-    setUpdating(true);
-    setUpdateError(null);
-
-    try {
-      const response = await fetch(
-        `https://tmp-se-projectapi.azurewebsites.net/api/tracks/${trackId}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(updateFormData),
-        }
-      );
-
-      if (!response.ok) {
-        const errorData = await response
-          .json()
-          .catch(() => ({ message: "Failed to parse error response." }));
-        throw new Error(
-          errorData.message || `HTTP error! status: ${response.status}`
-        );
-      }
-
-      const updatedTrack = await response.json();
-
-      // Update the track state with new data
-      if (updatedTrack.track) {
-        setTrack(updatedTrack.track);
-      } else if (updatedTrack.data) {
-        setTrack(updatedTrack.data);
-      } else {
-        setTrack(updatedTrack);
-      }
-
-      setShowUpdateModal(false);
-      // You could show a success message here if desired
-    } catch (err) {
-      setUpdateError("Failed to update track: " + err.message);
-    } finally {
-      setUpdating(false);
-    }
-  };
-
-  // Handle track deletion
-  const handleDelete = async () => {
-    setDeleting(true);
-    setDeleteError(null);
-
-    try {
-      const response = await fetch(
-        `https://tmp-se-projectapi.azurewebsites.net/api/tracks/${trackId}`,
-        {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      if (!response.ok) {
-        const errorData = await response
-          .json()
-          .catch(() => ({ message: "Failed to parse error response." }));
-        throw new Error(
-          errorData.message || `HTTP error! status: ${response.status}`
-        );
-      }
-
-      // Navigate back to tracks list after successful deletion
-      navigate("/trek");
-    } catch (err) {
-      setDeleteError("Failed to delete track: " + err.message);
-    } finally {
-      setDeleting(false);
     }
   };
 
   const handleUpdateFormChange = (e) => {
     const { name, value } = e.target;
-    setUpdateFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setUpdateFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  if (loading) {
-    return (
-      <div className="max-w-2xl mx-auto p-8 text-center">
-        <p className="text-gray-500">Loading track details...</p>
-      </div>
-    );
-  }
+  const handleImageChange = (e) => {
+    setImageFile(e.target.files[0]);
+  };
 
-  if (error || !track) {
-    return (
-      <div className="max-w-2xl mx-auto p-8 text-center">
-        <p className="text-red-500">{error || "No details found."}</p>
-        <Link to="/trek" className="text-blue-600 ">
-          Back to Tracks
-        </Link>
-      </div>
-    );
-  }
+  const handleUpdateSubmit = async (e) => {
+    e.preventDefault();
+    setUpdating(true);
+    setUpdateError(null);
+    const submissionData = new FormData();
+    Object.keys(updateFormData).forEach((key) => {
+      submissionData.append(key, updateFormData[key]);
+    });
+    if (imageFile) {
+      submissionData.append("image", imageFile);
+    }
+    try {
+      const updatedTrack = await updateTrack(trackId, submissionData);
+      setTrack(updatedTrack);
+      setShowUpdateModal(false);
+      setImageFile(null);
+    } catch (err) {
+      setUpdateError(err.response?.data?.error || "Failed to update track.");
+      console.error(err);
+    } finally {
+      setUpdating(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    setDeleting(true);
+    setDeleteError(null);
+    try {
+      await deleteTrack(trackId);
+      navigate("/trek");
+    } catch (err) {
+      setDeleteError("Failed to delete track.");
+      console.error(err);
+    } finally {
+      setDeleting(false);
+    }
+  };
+
+  const calculateAverageRating = (ratings) => {
+    if (!ratings || ratings.length === 0) return 0;
+    const totalRating = ratings.reduce((sum, r) => sum + r.rating, 0);
+    return (totalRating / ratings.length).toFixed(1);
+  };
+
+  // --- JSX FOR RENDERING ---
+  if (loading) return <div className="text-center p-8">Loading...</div>;
+  if (error) return <div className="text-center p-8 text-red-500">{error}</div>;
+  if (!track) return <div className="text-center p-8">Track not found.</div>;
 
   const averageRating = calculateAverageRating(track.ratings);
 
   return (
-    <div className="max-w-3xl mx-auto p-8 bg-white rounded-lg shadow">
-      <div className="flex flex-col md:flex-col gap-8">
-        <div className="flex-shrink-0">
-          <img
-            src={track.image}
-            alt={track.name}
-            className="w-[672px] h-[342px] object-cover rounded-lg shadow border ml-4"
-            onError={(e) => (e.target.style.display = "none")}
-          />
+    <div className="max-w-3xl mx-auto p-4 md:p-8">
+      <div className="bg-white p-6 rounded-lg shadow-lg">
+        <img
+          src={track.image}
+          alt={track.name}
+          className="w-full h-auto max-h-[400px] object-cover rounded-lg mb-6"
+        />
+        <div className="flex justify-between items-start mb-2">
+          <h1 className="text-2xl md:text-4xl font-bold">{track.name}</h1>
+          <p className="text-2xl md:text-3xl font-bold text-gray-800">
+            ${track.price}
+          </p>
         </div>
-        <div className="">
-          <h1 className="text-3xl font-bold mb-2">{track.name}</h1>
-          <div className="flex items-center justify-between">
-            <div className="flex gap-6 mb-2">
-              <div className="flex">
-                <IoPersonOutline className="mt-1 mr-1" /> {track.instructor}
-              </div>
-              <div className="flex">
-                <SlCalender className="mt-1 mr-1" />
-                {track.duration}
-              </div>
-            </div>
-            <div className="mb-2 font-bold">${track.price}</div>
+        <div className="flex flex-wrap items-center gap-x-6 gap-y-2 mb-4 text-gray-600">
+          <div className="flex items-center">
+            <IoPersonOutline className="mr-1.5" /> {track.instructor}
           </div>
-          <p className="text-gray-700 mb-4">{track.description}</p>
-
-          <div className="flex  items-center justify-between">
-            <div className="mb-4">
-              <strong>Courses:</strong>
-              {track.courses && track.courses.length > 0 ? (
-                <ul className="list-disc pl-5">
-                  {track.courses.map((course) => (
-                    <li key={course._id}>{course.title}</li>
-                  ))}
-                </ul>
-              ) : (
-                <span>No courses listed.</span>
-              )}
-            </div>
-            <div className="flex gap-4">
-              <LuPencil
-                className="text-blue-500 cursor-pointer hover:text-blue-700 text-xl"
-                onClick={() => setShowUpdateModal(true)}
-                title="Edit Track"
+          <div className="flex items-center">
+            <SlCalender className="mr-1.5" /> {track.duration}
+          </div>
+        </div>
+        <div className="flex items-center mb-4">
+          <div className="flex items-center">
+            {[...Array(5)].map((_, index) => (
+              <FaStar
+                key={index}
+                className={
+                  index < Math.floor(averageRating)
+                    ? "text-yellow-400"
+                    : "text-gray-300"
+                }
               />
-              <RiDeleteBin6Line
-                className="text-red-500 cursor-pointer hover:text-red-700 text-xl"
-                onClick={() => setShowDeleteConfirm(true)}
-                title="Delete Track"
+            ))}
+          </div>
+          <span className="ml-2 font-semibold text-gray-700">
+            {averageRating}
+          </span>
+          <span className="ml-1 text-gray-500">
+            ({track.ratings ? track.ratings.length : 0} reviews)
+          </span>
+        </div>
+        <p className="text-gray-700 mb-6">{track.description}</p>
+        <div className="flex justify-between items-start">
+          <div>
+            <h3 className="text-lg font-semibold mb-2">Courses Included</h3>
+            {track.courses && track.courses.length > 0 ? (
+              <ul className="list-disc pl-5 text-gray-600">
+                {track.courses.map((course) => (
+                  <li key={course._id}>{course.title}</li>
+                ))}
+              </ul>
+            ) : (
+              <p className="text-gray-500">No courses listed.</p>
+            )}
+          </div>
+          <div className="flex gap-4 items-center">
+            <LuPencil
+              title="Edit Track"
+              className="text-xl text-blue-500 hover:text-blue-700 cursor-pointer"
+              onClick={() => setShowUpdateModal(true)}
+            />
+            <RiDeleteBin6Line
+              title="Delete Track"
+              className="text-xl text-red-500 hover:text-red-700 cursor-pointer"
+              onClick={() => setShowDeleteConfirm(true)}
+            />
+          </div>
+        </div>
+        <hr className="my-8" />
+        <div className="p-4 border rounded-lg bg-gray-50">
+          <h3 className="text-xl font-semibold mb-3">Leave a Review</h3>
+          <form onSubmit={handleRatingSubmit}>
+            <div className="mb-3">
+              <label htmlFor="reviewTitle" className="sr-only">
+                Review Title
+              </label>
+              <input
+                id="reviewTitle"
+                type="text"
+                value={newTitle}
+                onChange={(e) => setNewTitle(e.target.value)}
+                placeholder="Review Title"
+                className="shadow-sm appearance-none border rounded w-full py-2 px-3 text-gray-700"
+                required
               />
             </div>
-          </div>
-
-          {/* Average Rating Display */}
-          <div className="flex items-center mb-4">
-            <strong className="mr-2">Rating:</strong>
-            <div className="flex">
-              {[...Array(5)].map((_, index) => (
-                <FaStar
-                  key={index}
-                  className={
-                    index < Math.floor(averageRating)
-                      ? "text-yellow-500"
-                      : "text-gray-300"
-                  }
-                />
-              ))}
+            <div className="mb-3">
+              <div className="flex items-center gap-1">
+                {[...Array(5)].map((_, index) => {
+                  const ratingValue = index + 1;
+                  return (
+                    <label key={ratingValue}>
+                      <input
+                        type="radio"
+                        name="rating"
+                        value={ratingValue}
+                        onClick={() => setNewRating(ratingValue)}
+                        className="hidden"
+                      />
+                      <FaStar
+                        className="text-2xl cursor-pointer"
+                        color={ratingValue <= newRating ? "#ffc107" : "#e4e5e9"}
+                      />
+                    </label>
+                  );
+                })}
+              </div>
             </div>
-            <span className="ml-2 text-gray-700">
-              {averageRating} ({track.ratings ? track.ratings.length : 0}{" "}
-              reviews)
-            </span>
-          </div>
-
-          {/* Add a Rating Section */}
-          <div className="mt-6 p-4 border rounded-lg bg-gray-50">
-            <h2 className="text-xl font-semibold mb-3">Add Your Rating</h2>
-            <form onSubmit={handleRatingSubmit}>
-              <div className="mb-3">
-                <label className="block text-gray-700 text-sm font-bold mb-2">
-                  Your Rating:
-                </label>
-                <div className="flex">
-                  {[...Array(5)].map((_, index) => {
-                    const ratingValue = index + 1;
-                    return (
-                      <label key={ratingValue}>
-                        <input
-                          type="radio"
-                          name="rating"
-                          value={ratingValue}
-                          onClick={() => setNewRating(ratingValue)}
-                          className="hidden"
-                        />
-                        {newRating >= ratingValue ? (
-                          <FaStar className="text-yellow-500 text-2xl cursor-pointer" />
-                        ) : (
-                          <CiStar className="text-gray-400 text-2xl cursor-pointer" />
-                        )}
-                      </label>
-                    );
-                  })}
-                </div>
-              </div>
-              <div className="mb-4">
-                <label
-                  htmlFor="review"
-                  className="block text-gray-700 text-sm font-bold mb-2"
-                >
-                  Your Review (optional):
-                </label>
-                <textarea
-                  id="review"
-                  value={newReview}
-                  onChange={(e) => setNewReview(e.target.value)}
-                  rows="4"
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  placeholder="Share your thoughts about this track..."
-                ></textarea>
-              </div>
-              {ratingError && (
-                <p className="text-red-500 text-sm mb-3">{ratingError}</p>
-              )}
-              {ratingSuccess && (
-                <p className="text-green-600 text-sm mb-3">
-                  Rating submitted successfully!
-                </p>
-              )}
-              <button
-                type="submit"
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                disabled={submittingRating}
-              >
-                {submittingRating ? "Submitting..." : "Submit Rating"}
-              </button>
-            </form>
-          </div>
-
-          {/* Individual Reviews Display */}
-          {track.ratings && track.ratings.length > 0 && (
-            <div className="mt-8">
-              <h2 className="text-xl font-semibold mb-4">Reviews</h2>
-              {track.ratings.map((rating, index) => (
-                <div key={rating._id || index} className="border-b pb-4 mb-4">
-                  <div className="flex items-center mb-2">
+            <textarea
+              value={newReview}
+              onChange={(e) => setNewReview(e.target.value)}
+              rows="3"
+              className="shadow-sm appearance-none border rounded w-full py-2 px-3 text-gray-700"
+              placeholder="Share your experience..."
+            ></textarea>
+            {ratingError && (
+              <p className="text-red-500 text-sm mt-2">{ratingError}</p>
+            )}
+            {ratingSuccess && (
+              <p className="text-green-600 text-sm mt-2">
+                Thank you for your review!
+              </p>
+            )}
+            <button
+              type="submit"
+              className="mt-3 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              disabled={submittingRating}
+            >
+              {submittingRating ? "Submitting..." : "Submit Review"}
+            </button>
+          </form>
+        </div>
+        {track.ratings && track.ratings.length > 0 && (
+          <div className="mt-8">
+            <h3 className="text-xl font-semibold mb-4">
+              What Others Are Saying
+            </h3>
+            <div className="space-y-6">
+              {track.ratings.map((rating) => (
+                <div key={rating._id} className="border-b pb-4">
+                  <h4 className="font-semibold">{rating.title}</h4>
+                  <div className="flex items-center my-2">
                     {[...Array(5)].map((_, starIndex) => (
                       <FaStar
                         key={starIndex}
                         className={
                           starIndex < rating.rating
-                            ? "text-yellow-500"
+                            ? "text-yellow-400"
                             : "text-gray-300"
                         }
                       />
                     ))}
-                    <span className="ml-2 text-gray-600 font-medium">
-                      {rating.rating} / 5
-                    </span>
                   </div>
                   {rating.review && (
                     <p className="text-gray-800 italic">"{rating.review}"</p>
                   )}
-                  {rating.createdAt && (
-                    <p className="text-gray-500 text-sm mt-1">
-                      Reviewed on:{" "}
-                      {new Date(rating.createdAt).toLocaleDateString()}
-                    </p>
-                  )}
+                  <p className="text-gray-500 text-sm mt-2">
+                    Reviewed on:{" "}
+                    {new Date(rating.createdAt).toLocaleDateString()}
+                  </p>
                 </div>
               ))}
             </div>
-          )}
-        </div>
+          </div>
+        )}
       </div>
 
-      {/* Update Modal */}
+      {/* --- UPDATE MODAL --- */}
       {showUpdateModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg w-full max-w-md max-h-[90vh] overflow-y-auto">
-            <h2 className="text-xl font-bold mb-4">Update Track</h2>
+        <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4">
+          <div className="bg-white p-6 rounded-lg shadow-xl w-full max-w-md max-h-[90vh] overflow-y-auto">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-2xl font-bold">Update Track</h2>
+              <button
+                onClick={() => setShowUpdateModal(false)}
+                className="text-3xl font-light leading-none hover:text-red-600"
+              >
+                &times;
+              </button>
+            </div>
             <form onSubmit={handleUpdateSubmit}>
-              <div className="mb-4">
-                <label className="block text-gray-700 text-sm font-bold mb-2">
-                  Track Name:
-                </label>
-                <input
-                  type="text"
-                  name="name"
-                  value={updateFormData.name}
-                  onChange={handleUpdateFormChange}
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  required
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-gray-700 text-sm font-bold mb-2">
-                  Instructor:
-                </label>
-                <input
-                  type="text"
-                  name="instructor"
-                  value={updateFormData.instructor}
-                  onChange={handleUpdateFormChange}
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  required
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-gray-700 text-sm font-bold mb-2">
-                  Duration:
-                </label>
-                <input
-                  type="text"
-                  name="duration"
-                  value={updateFormData.duration}
-                  onChange={handleUpdateFormChange}
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  required
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-gray-700 text-sm font-bold mb-2">
-                  Price:
-                </label>
-                <input
-                  type="number"
-                  name="price"
-                  value={updateFormData.price}
-                  onChange={handleUpdateFormChange}
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  required
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-gray-700 text-sm font-bold mb-2">
-                  Description:
-                </label>
-                <textarea
-                  name="description"
-                  value={updateFormData.description}
-                  onChange={handleUpdateFormChange}
-                  rows="3"
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  required
-                ></textarea>
-              </div>
-              <div className="mb-4">
-                <label className="block text-gray-700 text-sm font-bold mb-2">
-                  Image URL:
-                </label>
-                <input
-                  type="url"
-                  name="image"
-                  value={updateFormData.image}
-                  onChange={handleUpdateFormChange}
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                />
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">
+                    Track name
+                  </label>
+                  <input
+                    type="text"
+                    name="name"
+                    value={updateFormData.name}
+                    onChange={handleUpdateFormChange}
+                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">
+                    Price
+                  </label>
+                  <input
+                    type="number"
+                    name="price"
+                    value={updateFormData.price}
+                    onChange={handleUpdateFormChange}
+                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">
+                    Duration
+                  </label>
+                  <input
+                    type="text"
+                    name="duration"
+                    value={updateFormData.duration}
+                    onChange={handleUpdateFormChange}
+                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">
+                    Instructor
+                  </label>
+                  <input
+                    type="text"
+                    name="instructor"
+                    value={updateFormData.instructor}
+                    onChange={handleUpdateFormChange}
+                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">
+                    Picture
+                  </label>
+                  <input
+                    type="file"
+                    name="image"
+                    onChange={handleImageChange}
+                    className="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">
+                    Description
+                  </label>
+                  <textarea
+                    name="description"
+                    value={updateFormData.description}
+                    onChange={handleUpdateFormChange}
+                    rows="4"
+                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md"
+                    required
+                  ></textarea>
+                </div>
               </div>
               {updateError && (
-                <p className="text-red-500 text-sm mb-4">{updateError}</p>
+                <p className="text-red-500 text-sm mt-4">{updateError}</p>
               )}
-              <div className="flex justify-end gap-2">
+              <div className="mt-6 flex justify-end gap-3">
                 <button
                   type="button"
-                  onClick={() => {
-                    setShowUpdateModal(false);
-                    setUpdateError(null);
-                  }}
-                  className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                  onClick={() => setShowUpdateModal(false)}
+                  className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-md"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                   disabled={updating}
+                  className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md"
                 >
                   {updating ? "Updating..." : "Update Track"}
                 </button>
@@ -552,38 +455,32 @@ const TrackDetails = () => {
         </div>
       )}
 
-      {/* Delete Confirmation Modal */}
+      {/* --- DELETE CONFIRMATION MODAL --- */}
       {showDeleteConfirm && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg w-full max-w-md">
-            <h2 className="text-xl font-bold mb-4 text-red-600">
-              Confirm Delete
-            </h2>
-            <p className="mb-4">
-              Are you sure you want to delete this track? This action cannot be
-              undone.
+        <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4">
+          <div className="bg-white p-6 rounded-lg shadow-xl w-full max-w-md">
+            <h2 className="text-2xl font-bold mb-4">Confirm Deletion</h2>
+            <p className="mb-6">
+              Are you sure you want to delete the track "{track.name}"? This
+              action cannot be undone.
             </p>
-            <p className="mb-6 font-semibold">Track: {track.name}</p>
             {deleteError && (
-              <p className="text-red-500 text-sm mb-4">{deleteError}</p>
+              <p className="text-red-500 text-xs italic mb-4">{deleteError}</p>
             )}
-            <div className="flex justify-end gap-2">
+            <div className="flex justify-end gap-4">
               <button
-                onClick={() => {
-                  setShowDeleteConfirm(false);
-                  setDeleteError(null);
-                }}
-                className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                disabled={deleting}
+                type="button"
+                onClick={() => setShowDeleteConfirm(false)}
+                className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
               >
                 Cancel
               </button>
               <button
                 onClick={handleDelete}
-                className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                 disabled={deleting}
+                className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
               >
-                {deleting ? "Deleting..." : "Delete Track"}
+                {deleting ? "Deleting..." : "Delete"}
               </button>
             </div>
           </div>

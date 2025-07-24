@@ -23,7 +23,6 @@ const SignIn = () => {
       [name]: value,
     }));
 
-    // Clear error when user starts typing
     if (errors[name]) {
       setErrors((prev) => ({
         ...prev,
@@ -35,17 +34,14 @@ const SignIn = () => {
   // Validate form data
   const validateForm = () => {
     const newErrors = {};
-
     if (!formData.email.trim()) {
       newErrors.email = "Email is required";
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
       newErrors.email = "Email is invalid";
     }
-
     if (!formData.password) {
       newErrors.password = "Password is required";
     }
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -53,92 +49,49 @@ const SignIn = () => {
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!validateForm()) {
       return;
     }
 
     setIsLoading(true);
+    setErrors({}); // Clear previous submission errors
 
     try {
-      console.log("Sending login request with data:", {
-        email: formData.email,
-      });
-
-      // Using Vite proxy - requests to /api/* will be forwarded to the Azure API
       const apiUrl = "/api/auth/login";
-
       const response = await fetch(apiUrl, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Accept: "application/json",
         },
-        mode: "cors",
         body: JSON.stringify({
           email: formData.email,
           password: formData.password,
         }),
       });
 
-      console.log("Response status:", response.status);
-
-      let data;
-      const contentType = response.headers.get("content-type");
-      if (contentType && contentType.includes("application/json")) {
-        data = await response.json();
-        console.log("Response data:", data);
-      } else {
-        const textResponse = await response.text();
-        console.log("Non-JSON response:", textResponse);
-        data = { message: textResponse };
-      }
+      const data = await response.json();
 
       if (response.ok) {
-        // Success - store token if provided and redirect to dashboard
-        console.log("Login successful:", data);
-
-        // Store authentication token if provided
+        // Success - store token if provided and redirect
         if (data.token) {
-          localStorage.setItem("authToken", data.token);
+          // ✅ CORRECTED: Save with the key 'token' to match the service file.
+          localStorage.setItem("token", data.token);
         }
-
         alert("Login successful!");
-        navigate("/"); // or navigate to dashboard
+        navigate("/"); // Navigate to the homepage or dashboard
       } else {
-        // Handle API errors
-        console.error("API Error:", data);
-
-        let errorMessage = "Login failed. ";
-        if (data.message) {
-          errorMessage += data.message;
-        } else if (data.error) {
-          errorMessage += data.error;
-        } else {
-          errorMessage += `Status: ${response.status}`;
-        }
-
+        // Handle API errors (e.g., wrong password)
         setErrors({
-          submit: errorMessage,
+          submit:
+            data.message || "Login failed. Please check your credentials.",
         });
       }
     } catch (error) {
+      // Handle network errors
+      setErrors({
+        submit: "A network error occurred. Please try again later.",
+      });
       console.error("Login error details:", error);
-
-      if (error.name === "TypeError" && error.message.includes("fetch")) {
-        setErrors({
-          submit:
-            "Unable to connect to the server. Please check if the API is running and try again.",
-        });
-      } else if (error.name === "AbortError") {
-        setErrors({
-          submit: "Request timed out. Please try again.",
-        });
-      } else {
-        setErrors({
-          submit: `Network error: ${error.message}. Please check your connection and try again.`,
-        });
-      }
     } finally {
       setIsLoading(false);
     }
@@ -151,7 +104,7 @@ const SignIn = () => {
         alt="Background"
         className="absolute inset-0 w-full h-full object-cover"
       />
-      <div className="absolute inset-0 flex items-center justify-center">
+      <div className="absolute inset-0 flex items-center justify-center p-4">
         <div className="md:w-[495px] w-full bg-white bg-opacity-80 p-8 rounded-md shadow-lg">
           <div className="mb-4 text-center">
             <img
@@ -159,15 +112,14 @@ const SignIn = () => {
               alt="One C Logo"
               className="mx-auto w-20 h-20 object-contain"
             />
-            <h2 className="font-bold text-[28px] font-roboto">Admin Login</h2>
-            <p className="text-gray-600 text-[18px]">
+            <h2 className="font-bold text-3xl font-roboto">Admin Login</h2>
+            <p className="text-gray-600 text-lg">
               Login to Manage and Access the Dashboard Effortlessly.
             </p>
           </div>
 
-          {/* Display general error message */}
           {errors.submit && (
-            <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+            <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded text-center">
               {errors.submit}
             </div>
           )}
@@ -228,11 +180,7 @@ const SignIn = () => {
               </Link>
             </div>
 
-            <AccountButtons
-              type="submit"
-              disabled={isLoading}
-              onClick={handleSubmit}
-            >
+            <AccountButtons type="submit" disabled={isLoading}>
               {isLoading ? "Logging in..." : "Login"}
             </AccountButtons>
           </form>
