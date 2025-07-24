@@ -13,6 +13,7 @@
     "@tailwindcss/postcss": "^4.1.11",
     "@tailwindcss/vite": "^4.1.11",
     "axios": "^1.11.0",
+    "browser-image-compression": "^2.0.2",
     "firebase": "^11.10.0",
     "framer-motion": "^12.23.6",
     "google-font-installer": "^1.1.0",

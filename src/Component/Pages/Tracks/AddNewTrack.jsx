@@ -12,7 +12,7 @@ const AddNewTrack = ({ isOpen, onClose, onAddTrack }) => {
   const [error, setError] = useState("");
 
   const handleSubmit = async (e) => {
-    e.preventDefault(); // This is crucial to prevent default form submission behavior
+    e.preventDefault();
 
     setIsSubmitting(true);
     setError("");
@@ -29,9 +29,6 @@ const AddNewTrack = ({ isOpen, onClose, onAddTrack }) => {
         throw new Error("Please fill in all required fields.");
       }
 
-      // Get authentication token
-      // IMPORTANT: In a real application, fetch this dynamically (e.g., from context, Redux, localStorage)
-      // Hardcoding tokens is fine for quick testing but not for production.
       const token =
         "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODdhNDZkZTBhZTRjZWE5Nzk4M2Q5NDMiLCJyb2xlIjoiQWRtaW4iLCJpYXQiOjE3NTMzMDkwMzYsImV4cCI6MTc1MzkxMzgzNn0.v0lT5Bz_vLLKjC4xh-V_9KSmBwzAomEl6GP02ZN-bSE";
 
@@ -100,11 +97,7 @@ const AddNewTrack = ({ isOpen, onClose, onAddTrack }) => {
 
       const newTrackData = await response.json(); // The created track data from API
 
-      // Call the parent component's callback with the newly created track data
       if (onAddTrack) {
-        // You might need to adjust what the API returns.
-        // If it returns a nested object (e.g., { data: newTrack }), extract it.
-        // Assuming your API returns the new track directly or under a 'data' key.
         onAddTrack(newTrackData.data || newTrackData.track || newTrackData);
       }
 
