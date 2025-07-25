@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import {
   getTrackById,
   addRating,
   updateTrack,
   deleteTrack,
 } from "./TrackService.jsx";
+import { FaArrowLeft } from "react-icons/fa";
 
 // Your Icon Imports
 import { LuPencil } from "react-icons/lu";
@@ -27,8 +28,6 @@ const TrackDetails = () => {
   const [newRating, setNewRating] = useState(0);
   const [newReview, setNewReview] = useState("");
   const [newTitle, setNewTitle] = useState("");
-  const [submittingRating, setSubmittingRating] = useState(false);
-  const [ratingError, setRatingError] = useState(null);
   const [ratingSuccess, setRatingSuccess] = useState(false);
 
   // State for the update modal
@@ -173,6 +172,15 @@ const TrackDetails = () => {
 
   return (
     <div className="max-w-3xl mx-auto p-4 md:p-8">
+      <button
+        onClick={() => navigate("/trek")} // Navigates to your main tracks page
+        className="flex items-center gap-2 text-primary hover:underline font-semibold"
+      >
+        <FaArrowLeft
+          size={26}
+          className="text-primary hover:text-blue-900 mb-4 cursor-pointer"
+        />
+      </button>
       <div className="bg-white p-6 rounded-lg shadow-lg">
         <img
           src={track.image}
@@ -241,107 +249,11 @@ const TrackDetails = () => {
           </div>
         </div>
         <hr className="my-8" />
-        <div className="p-4 border rounded-lg bg-gray-50">
-          <h3 className="text-xl font-semibold mb-3">Leave a Review</h3>
-          <form onSubmit={handleRatingSubmit}>
-            <div className="mb-3">
-              <label htmlFor="reviewTitle" className="sr-only">
-                Review Title
-              </label>
-              <input
-                id="reviewTitle"
-                type="text"
-                value={newTitle}
-                onChange={(e) => setNewTitle(e.target.value)}
-                placeholder="Review Title"
-                className="shadow-sm appearance-none border rounded w-full py-2 px-3 text-gray-700"
-                required
-              />
-            </div>
-            <div className="mb-3">
-              <div className="flex items-center gap-1">
-                {[...Array(5)].map((_, index) => {
-                  const ratingValue = index + 1;
-                  return (
-                    <label key={ratingValue}>
-                      <input
-                        type="radio"
-                        name="rating"
-                        value={ratingValue}
-                        onClick={() => setNewRating(ratingValue)}
-                        className="hidden"
-                      />
-                      <FaStar
-                        className="text-2xl cursor-pointer"
-                        color={ratingValue <= newRating ? "#ffc107" : "#e4e5e9"}
-                      />
-                    </label>
-                  );
-                })}
-              </div>
-            </div>
-            <textarea
-              value={newReview}
-              onChange={(e) => setNewReview(e.target.value)}
-              rows="3"
-              className="shadow-sm appearance-none border rounded w-full py-2 px-3 text-gray-700"
-              placeholder="Share your experience..."
-            ></textarea>
-            {ratingError && (
-              <p className="text-red-500 text-sm mt-2">{ratingError}</p>
-            )}
-            {ratingSuccess && (
-              <p className="text-green-600 text-sm mt-2">
-                Thank you for your review!
-              </p>
-            )}
-            <button
-              type="submit"
-              className="mt-3 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-              disabled={submittingRating}
-            >
-              {submittingRating ? "Submitting..." : "Submit Review"}
-            </button>
-          </form>
-        </div>
-        {track.ratings && track.ratings.length > 0 && (
-          <div className="mt-8">
-            <h3 className="text-xl font-semibold mb-4">
-              What Others Are Saying
-            </h3>
-            <div className="space-y-6">
-              {track.ratings.map((rating) => (
-                <div key={rating._id} className="border-b pb-4">
-                  <h4 className="font-semibold">{rating.title}</h4>
-                  <div className="flex items-center my-2">
-                    {[...Array(5)].map((_, starIndex) => (
-                      <FaStar
-                        key={starIndex}
-                        className={
-                          starIndex < rating.rating
-                            ? "text-yellow-400"
-                            : "text-gray-300"
-                        }
-                      />
-                    ))}
-                  </div>
-                  {rating.review && (
-                    <p className="text-gray-800 italic">"{rating.review}"</p>
-                  )}
-                  <p className="text-gray-500 text-sm mt-2">
-                    Reviewed on:{" "}
-                    {new Date(rating.createdAt).toLocaleDateString()}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
       </div>
 
       {/* --- UPDATE MODAL --- */}
       {showUpdateModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4">
+        <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="bg-white p-6 rounded-lg shadow-xl w-full max-w-md max-h-[90vh] overflow-y-auto">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-2xl font-bold">Update Track</h2>
@@ -457,7 +369,7 @@ const TrackDetails = () => {
 
       {/* --- DELETE CONFIRMATION MODAL --- */}
       {showDeleteConfirm && (
-        <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4">
+        <div className="fixed inset-0 bg-black/30 backdrop-blur-sm bg-opacity-60 flex items-center justify-center z-50 p-4">
           <div className="bg-white p-6 rounded-lg shadow-xl w-full max-w-md">
             <h2 className="text-2xl font-bold mb-4">Confirm Deletion</h2>
             <p className="mb-6">

@@ -2,9 +2,9 @@ import React, { useState, useEffect } from "react";
 import Title from "../../Titles/titles";
 import Subt from "../../Titles/subt";
 import Trek from "./Trek";
-import SearchBar from "../../Buttons/Searchbar";
-import AddTask from "../../Buttons/AddTask";
-import { FaPlus } from "react-icons/fa";
+// import SearchBar from "../../Buttons/Searchbar";
+// import AddTask from "../../Buttons/AddTask";
+// import { FaPlus } from "react-icons/fa";
 import AddNewTrack from "./AddNewTrack";
 
 // Change this component to accept 'fetchedTracks' as a prop
@@ -52,14 +52,13 @@ const Track = ({ fetchedTracks }) => {
       <Title text="Manage Tracks" />
       <Subt text="Filter, sort, and access detailed tracks" />
       <div className="flex items-center justify-between mt-4">
-        <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
-        <AddTask
+        {/* <AddTask
           className="flex items-center justify-center"
           onClick={openModal}
         >
           <FaPlus className="mt-1 mr-1" />
           Add Track
-        </AddTask>
+        </AddTask> */}
       </div>
       <div>
         {/* Pass filteredTracks to Trek */}

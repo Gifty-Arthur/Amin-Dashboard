@@ -82,16 +82,10 @@ const ForgotPassword = () => {
       }
 
       if (response.ok) {
-        // Success - show success message but DON'T redirect to OTP
         console.log("Forgot password request successful:", data);
         setIsSuccess(true);
-        // Store email in localStorage (optional, for reference)
         localStorage.setItem("resetEmail", formData.email);
-
-        // Don't redirect to OTP page since we're using email link reset
-        // The user will click the link in their email instead
       } else {
-        // Handle API errors
         console.error("API Error:", data);
         let errorMessage = "Failed to send reset email. ";
         if (data.message) {
@@ -140,7 +134,6 @@ const ForgotPassword = () => {
             </p>
           </div>
 
-          {/* Display success message */}
           {isSuccess && (
             <div className="mb-4 p-3 bg-green-100 border border-green-400 text-green-700 rounded">
               Password reset link has been sent to {formData.email}. Please
@@ -148,7 +141,6 @@ const ForgotPassword = () => {
             </div>
           )}
 
-          {/* Display general error message */}
           {errors.submit && (
             <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
               {errors.submit}

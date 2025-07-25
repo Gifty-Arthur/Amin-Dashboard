@@ -7,7 +7,7 @@ import Home from "./Component/Pages/HomePage/Home";
 import Invoices from "./Component/Pages/Invoices";
 import DashboardLayout from "./Component/Pages/DashboardLayout ";
 import Learners from "./Component/Pages/Learners";
-import Courses from "./Component/Pages/Courses";
+import Courses from "./Component/Pages/Courses/Courses";
 import Track from "./Component/Pages/Tracks/Track";
 import OTP from "./Component/Accounts/OTP";
 import AdminResetPassword from "./Component/Accounts/AdminResetPassword";
@@ -17,11 +17,23 @@ import TrackDetails from "./Component/Pages/Tracks/TrackDetails";
 import AddNewTrack from "./Component/Pages/Tracks/AddNewTrack";
 import EmailVerification from "./Component/Accounts/EmailVerification";
 
+//Learners
+import WebsiteLayout from "./LearnerDesktop/WebsiteLayout";
+import LearnerMain from "./LearnerDesktop/LearnerHomePage/LearnerMain";
+import Trek from "./Component/Pages/Tracks/Trek";
+
 function App() {
   return (
     <Routes>
       {/* Auth pages - without sidebar */}
-
+      <Route
+        path="/learner"
+        element={
+          <WebsiteLayout>
+            <LearnerMain />
+          </WebsiteLayout>
+        }
+      />
       <Route path="/signup" element={<SignUp />} />
       <Route path="/login" element={<SignIn />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
@@ -31,6 +43,15 @@ function App() {
       <Route path="/reset-password/:token" element={<AdminResetPassword />} />
       <Route path="/reset-password" element={<AdminResetPassword />} />
       <Route path="/add-new-track" element={<AddNewTrack />} />
+      <Route
+        path="/trek"
+        element={
+          <DashboardLayout>
+            <Trek />
+          </DashboardLayout>
+        }
+      />
+
       <Route
         path="/email-verification/:token"
         element={<EmailVerification />}
