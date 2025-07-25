@@ -51,15 +51,7 @@ const Track = ({ fetchedTracks }) => {
     <div className="">
       <Title text="Manage Tracks" />
       <Subt text="Filter, sort, and access detailed tracks" />
-      <div className="flex items-center justify-between mt-4">
-        {/* <AddTask
-          className="flex items-center justify-center"
-          onClick={openModal}
-        >
-          <FaPlus className="mt-1 mr-1" />
-          Add Track
-        </AddTask> */}
-      </div>
+      <div className="flex items-center justify-between mt-4"></div>
       <div>
         {/* Pass filteredTracks to Trek */}
         <Trek tracks={filteredTracks} />

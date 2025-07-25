@@ -80,7 +80,6 @@ const Trek = () => {
                 onClick={() => handleTrackClick(track._id)}
                 className="group block cursor-pointer h-full"
               >
-                {/* ✅ RESTORED CARD JSX */}
                 <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden h-full flex flex-col">
                   <div className="h-48 relative overflow-hidden flex-shrink-0">
                     {track.image ? (

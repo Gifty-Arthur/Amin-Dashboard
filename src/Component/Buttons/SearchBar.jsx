@@ -12,7 +12,7 @@ const SearchBar = ({ searchQuery, setSearchQuery, placeholder }) => {
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
         placeholder={placeholder || "Search..."}
-        className="pl-10 pr-4 py-2 border rounded-lg w-full"
+        className="pl-10 pr-4 py-2 border rounded-lg w-[389px] h-[40px]"
       />
     </div>
   );
