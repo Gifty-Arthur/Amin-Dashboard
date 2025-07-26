@@ -10,8 +10,6 @@ import { getAllTracks } from "./TrackService";
 import SearchBar from "../../Buttons/Searchbar";
 import AddTask from "../../Buttons/AddTask";
 import AddNewTrack from "./AddNewTrack";
-import Title from "../../Titles/titles";
-import Subt from "../../Titles/subt";
 
 const Trek = () => {
   const [tracks, setTracks] = useState([]);

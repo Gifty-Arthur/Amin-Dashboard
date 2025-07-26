@@ -21,6 +21,7 @@ import EmailVerification from "./Component/Accounts/EmailVerification";
 import WebsiteLayout from "./LearnerDesktop/WebsiteLayout";
 import LearnerMain from "./LearnerDesktop/LearnerHomePage/LearnerMain";
 import Trek from "./Component/Pages/Tracks/Trek";
+import AddCourse from "./Component/Pages/Courses/AddCourse";
 
 function App() {
   return (
@@ -43,6 +44,8 @@ function App() {
       <Route path="/reset-password/:token" element={<AdminResetPassword />} />
       <Route path="/reset-password" element={<AdminResetPassword />} />
       <Route path="/add-new-track" element={<AddNewTrack />} />
+      <Route path="/add-course" element={<AddCourse />} />
+
       <Route
         path="/trek"
         element={

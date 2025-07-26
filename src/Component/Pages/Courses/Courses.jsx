@@ -10,6 +10,8 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import { IoClose } from "react-icons/io5";
 import { getAllCourses, updateCourse, deleteCourse } from "./CourseServices";
 
+import AddCourse from "./AddCourse";
+
 const Courses = () => {
   // --- STATE DEFINITIONS ---
   const [courses, setCourses] = useState([]);
@@ -23,6 +25,21 @@ const Courses = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectedCourse, setSelectedCourse] = useState(null);
   const navigate = useNavigate();
+
+  //modal
+
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+
+  // ... other states for update/delete modals ...
+
+  // Handlers for the AddCourse modal
+  const openAddModal = () => setIsAddModalOpen(true);
+  const closeAddModal = () => setIsAddModalOpen(false);
+
+  const handleCourseAdded = (newCourse) => {
+    setCourses((prevCourses) => [newCourse, ...prevCourses]);
+    closeAddModal();
+  };
 
   // --- DATA FETCHING ---
   useEffect(() => {
@@ -91,7 +108,10 @@ const Courses = () => {
             placeholder="Search for a course..."
           />
         </div>
-        <AddTask className="flex items-center justify-center gap-2">
+        <AddTask
+          onClick={openAddModal}
+          className="flex items-center justify-center gap-2"
+        >
           <FaPlus />
           Add Course
         </AddTask>
@@ -134,13 +154,13 @@ const Courses = () => {
                           onClick={() => handleUpdateClick(course)}
                           title="Edit Course"
                         >
-                          <LuPencil className="text-blue-500 hover:text-blue-700" />
+                          <LuPencil className="text-blue-500 cursor-pointer hover:text-blue-700" />
                         </button>
                         <button
                           onClick={() => handleDeleteClick(course)}
                           title="Delete Course"
                         >
-                          <RiDeleteBin6Line className="text-red-500 hover:text-red-700" />
+                          <RiDeleteBin6Line className="text-red-500 cursor-pointer hover:text-red-700" />
                         </button>
                       </div>
                     </td>
@@ -187,6 +207,12 @@ const Courses = () => {
           </button>
         </div>
       )}
+
+      <AddCourse
+        isOpen={isAddModalOpen}
+        onClose={closeAddModal}
+        onCourseAdded={handleCourseAdded}
+      />
 
       {showUpdateModal && (
         <UpdateCourseModal

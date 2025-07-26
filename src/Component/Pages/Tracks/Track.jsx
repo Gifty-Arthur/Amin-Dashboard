@@ -15,23 +15,18 @@ const Track = ({ fetchedTracks }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Use useEffect to update 'tracks' state whenever 'fetchedTracks' prop changes.
   useEffect(() => {
-    // Only update if fetchedTracks is actually a valid array (or not null/undefined)
     if (fetchedTracks) {
       setTracks(fetchedTracks);
     }
   }, [fetchedTracks]); // Re-run this effect when fetchedTracks prop changes
 
-  // Filter tracks based on the search query.
-  // Add a defensive check here to ensure 'tracks' is an array before calling filter.
   const filteredTracks = Array.isArray(tracks) // <-- Key Change 2: Defensive check before filtering
     ? tracks.filter((track) =>
         track.name.toLowerCase().includes(searchQuery.toLowerCase())
       )
     : []; // If tracks isn't an array, default to an empty array for filtering
 
-  // Function to open the modal
   const openModal = () => {
     setIsModalOpen(true);
   };
