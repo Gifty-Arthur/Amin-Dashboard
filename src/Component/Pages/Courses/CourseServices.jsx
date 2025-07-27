@@ -3,6 +3,7 @@ import axios from "axios";
 // The base path for all course-related API calls
 const API_BASE_URL = "/api/courses";
 
+// Helper function to get the token from localStorage
 const getToken = () => localStorage.getItem("token");
 
 // Helper function to create the authorization header for protected requests

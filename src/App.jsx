@@ -4,7 +4,7 @@ import { Route, Routes } from "react-router-dom";
 import SignUp from "./Component/Accounts/SignUp";
 import SignIn from "./Component/Accounts/SignIn";
 import Home from "./Component/Pages/HomePage/Home";
-import Invoices from "./Component/Pages/Invoices";
+import Invoices from "./Component/Pages/Invoices/Invoices";
 import DashboardLayout from "./Component/Pages/DashboardLayout ";
 import Learners from "./Component/Pages/Learners";
 import Courses from "./Component/Pages/Courses/Courses";
