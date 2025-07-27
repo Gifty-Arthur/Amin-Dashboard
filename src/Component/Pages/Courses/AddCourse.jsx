@@ -47,7 +47,7 @@ const AddCourse = ({ isOpen, onClose, onCourseAdded }) => {
     setError("");
     if (formData.description.trim().length < 10) {
       setError("Description must be at least 10 characters long.");
-      return; // Stop the submission
+      return;
     }
     try {
       const submissionData = new FormData();
@@ -71,7 +71,7 @@ const AddCourse = ({ isOpen, onClose, onCourseAdded }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+    <div className="fixed inset-0  bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
       <div className="bg-white p-6 rounded-lg w-full max-w-md max-h-[90vh] overflow-y-auto">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-bold">Add New Course</h2>
@@ -148,16 +148,9 @@ const AddCourse = ({ isOpen, onClose, onCourseAdded }) => {
           {error && <p className="text-red-500 mt-2 text-sm">{error}</p>}
           <div className="flex justify-end gap-4 pt-4">
             <button
-              type="button"
-              onClick={onClose}
-              className="px-4 py-2 bg-gray-200 rounded-md"
-            >
-              Cancel
-            </button>
-            <button
               type="submit"
               disabled={isSubmitting}
-              className="px-4 py-2 bg-blue-500 text-white rounded-md disabled:opacity-50"
+              className="px-4 py-2 bg-primary text-white rounded-md disabled:opacity-50"
             >
               {isSubmitting ? "Creating..." : "Create Course"}
             </button>

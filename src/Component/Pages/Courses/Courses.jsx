@@ -191,7 +191,7 @@ const Courses = () => {
             <button
               key={index + 1}
               onClick={() => setCurrentPage(index + 1)}
-              className={`px-4 py-2 border rounded-md ${
+              className={`px-4 py-2 w-[40px] border rounded-md ${
                 currentPage === index + 1 ? "bg-primary text-white" : "bg-white"
               }`}
             >
