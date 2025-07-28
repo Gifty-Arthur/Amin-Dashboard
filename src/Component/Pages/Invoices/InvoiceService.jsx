@@ -2,14 +2,11 @@ import axios from "axios";
 
 const API_BASE_URL = "/api/invoices";
 
-const getToken = () => localStorage.getItem("token");
-
 const getAuthConfig = () => {
-  const token = getToken();
+  const token = localStorage.getItem("token");
   if (!token) {
-    throw new Error("Authentication token not found. [lease log in");
+    throw new Error("Authentication token not found.");
   }
-
   return {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -17,34 +14,42 @@ const getAuthConfig = () => {
   };
 };
 
+/**
+ * Fetches all invoices.
+ */
 export const getAllInvoices = async () => {
-  const response = await axios.get(API_BASE_URL);
+  const config = getAuthConfig();
+  const response = await axios.get(API_BASE_URL, config);
+  return response.data.invoices || response.data;
+};
+
+/**
+ * Fetches a single invoice by its ID.
+ */
+export const getInvoiceById = async (invoiceId) => {
+  const config = getAuthConfig();
+  const response = await axios.get(`${API_BASE_URL}/${invoiceId}`, config);
   return response.data.invoice || response.data;
 };
 
-export const getInvoiceById = async (invoiceId) => {
-  const response = await axios.get(`${API_BASE_URL}/${invoiceId}`);
-  return response.data.course || response.data;
-};
-
+/**
+ * Creates a new invoice.
+ */
 export const createInvoice = async (invoiceData) => {
   const config = getAuthConfig();
   const response = await axios.post(API_BASE_URL, invoiceData, config);
   return response.data;
 };
 
-export const updateInvoice = async (invoiceData) => {
+/**
+ * Updates an existing invoice.
+ */
+export const updateInvoice = async (invoiceId, invoiceData) => {
   const config = getAuthConfig();
   const response = await axios.put(
-    `${API_BASE_URL}/${invoiceData.id}`,
+    `${API_BASE_URL}/${invoiceId}`,
     invoiceData,
     config
   );
   return response.data;
-};
-
-export const deleteInvoice = async (invoiceId) => {
-  const config = getAuthConfig();
-  await axios.delete(`${API_BASE_URL}/${invoiceId}`, config);
-  return true;
 };

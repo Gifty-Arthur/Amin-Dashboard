@@ -270,7 +270,7 @@ const UpdateCourseModal = ({ course, onClose, onCourseUpdated }) => {
       const updatedData = await updateCourse(course._id, submissionData);
       onCourseUpdated(updatedData.course || updatedData.data);
     } catch (err) {
-      setError("Failed to update course.");
+      setError("Please log in .");
       console.error(err);
     } finally {
       setIsUpdating(false);
@@ -365,7 +365,7 @@ const DeleteConfirmationModal = ({ course, onClose, onCourseDeleted }) => {
       await deleteCourse(course._id);
       onCourseDeleted(course._id);
     } catch (err) {
-      setError("Failed to delete course.");
+      setError("Please log in.");
       console.error(err);
     } finally {
       setIsDeleting(false);
