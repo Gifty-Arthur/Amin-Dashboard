@@ -1,10 +1,18 @@
 import React from "react";
+import AddTask from "../../Buttons/AddTask";
+import SearchBar from "../../Buttons/Searchbar";
+import Title from "../../Titles/titles";
+import Subt from "../../Titles/subt";
 
 const Learners = () => {
   return (
     <div>
-      <div className="text-black text-2xl p-5">
-        <h1>Hi, this is the learners Page</h1>
+      <div className="">
+        <Title text="Manage Learners" />
+        <Subt text="Filter, sort, and access detailed learners" />
+      </div>
+      <div className="flex items-end justify-end">
+        <SearchBar placeholder="Search by name..." />
       </div>
     </div>
   );
