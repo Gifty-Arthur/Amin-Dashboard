@@ -42,7 +42,6 @@ export const createInvoice = async (invoiceData) => {
 };
 
 /**
- * Updates an existing invoice.
  */
 export const updateInvoice = async (invoiceId, invoiceData) => {
   const config = getAuthConfig();
@@ -52,4 +51,10 @@ export const updateInvoice = async (invoiceId, invoiceData) => {
     config
   );
   return response.data;
+};
+
+export const deleteInvoice = async (invoiceId) => {
+  const config = getAuthConfig();
+  await axios.delete(`${API_BASE_URL}/${invoiceId}`, config);
+  return true;
 };

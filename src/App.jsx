@@ -6,7 +6,7 @@ import SignIn from "./Component/Accounts/SignIn";
 import Home from "./Component/Pages/HomePage/Home";
 import Invoices from "./Component/Pages/Invoices/Invoices";
 import DashboardLayout from "./Component/Pages/DashboardLayout ";
-import Learners from "./Component/Pages/Learners";
+import Learners from "./Component/Pages/Learners/Learners";
 import Courses from "./Component/Pages/Courses/Courses";
 import Track from "./Component/Pages/Tracks/Track";
 import OTP from "./Component/Accounts/OTP";

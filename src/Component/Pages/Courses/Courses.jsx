@@ -124,17 +124,25 @@ const Courses = () => {
           <table className="w-full text-left">
             <thead>
               <tr className="border-b">
-                <th className="p-4">Course</th>
-                <th className="p-4">Track</th>
-                <th className="p-4">Date Created</th>
-                <th className="p-4">Action</th>
+                <th className="p-4 text-[#7F7E83]  font-Figtree font-light text-[14px]">
+                  Course
+                </th>
+                <th className="p-3 text-[#7F7E83]  font-Figtree font-light text-[14px]">
+                  Track
+                </th>
+                <th className="p-3 text-[#7F7E83]  font-Figtree font-light text-[14px]">
+                  Date Created
+                </th>
+                <th className="p-4 text-[#7F7E83]  font-Figtree font-light text-[14px]">
+                  Action
+                </th>
               </tr>
             </thead>
             <tbody>
               {currentCourses.length > 0 ? (
                 currentCourses.map((course) => (
                   <tr key={course._id} className="hover:bg-gray-50">
-                    <td className="p-4 flex items-center gap-4">
+                    <td className="p-4 flex items-center gap-4 text-tert font-semibold text-[16px]">
                       <img
                         src={course.image}
                         alt={course.title}
@@ -142,10 +150,10 @@ const Courses = () => {
                       />
                       <span className="font-medium">{course.title}</span>
                     </td>
-                    <td className="p-4 text-gray-600">
+                    <td className="p-4 text-[#2E2C48] text-[16px] font-light font-figtree">
                       {course.track?.name || "N/A"}
                     </td>
-                    <td className="p-4 text-gray-600">
+                    <td className="p-4 text-[#2E2C48] text-[16px] font-light font-figtree">
                       {new Date(course.createdAt).toLocaleDateString()}
                     </td>
                     <td className="p-4">
