@@ -10,6 +10,7 @@ import AddTask from "../../Buttons/AddTask";
 import SearchBar from "../../Buttons/Searchbar";
 import { getAllInvoices, updateInvoice, deleteInvoice } from "./InvoiceService";
 import { getAllLearners } from "../Learners/LearnersService";
+import AddNewInvoice from "./AddNewInvoice";
 
 const Invoices = () => {
   const [invoices, setInvoices] = useState([]);
@@ -22,6 +23,7 @@ const Invoices = () => {
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectedInvoice, setSelectedInvoice] = useState(null);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false); // 2. ADD STATE for the modal
 
   useEffect(() => {
     const fetchInvoices = async () => {
@@ -74,6 +76,15 @@ const Invoices = () => {
       return newInvoices;
     });
     setShowUpdateModal(false);
+  };
+
+  // 3. ADD HANDLERS for the new modal
+  const openAddModal = () => setIsAddModalOpen(true);
+  const closeAddModal = () => setIsAddModalOpen(false);
+
+  const handleInvoiceAdded = (newInvoice) => {
+    setInvoices((prevInvoices) => [newInvoice, ...prevInvoices]);
+    closeAddModal();
   };
 
   // Alternative method: Refetch invoices after update for guaranteed consistency
@@ -133,7 +144,10 @@ const Invoices = () => {
             placeholder="Search by learner name..."
           />
         </div>
-        <AddTask className="flex items-center justify-center gap-2">
+        <AddTask
+          onClick={openAddModal}
+          className="flex items-center justify-center gap-2"
+        >
           <FaPlus />
           Add Invoice
         </AddTask>
@@ -245,6 +259,12 @@ const Invoices = () => {
           ))}
         </div>
       )}
+
+      <AddNewInvoice
+        isOpen={isAddModalOpen}
+        onClose={closeAddModal}
+        onInvoiceAdded={handleInvoiceAdded}
+      />
       {showUpdateModal && (
         <UpdateInvoiceModal
           invoice={selectedInvoice}
@@ -450,16 +470,9 @@ const UpdateInvoiceModal = ({ invoice, onClose, onInvoiceUpdated }) => {
 
           <div className="flex justify-end gap-4 pt-4">
             <button
-              type="button"
-              onClick={onClose}
-              className="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-md transition-colors"
-            >
-              Cancel
-            </button>
-            <button
               type="submit"
               disabled={isUpdating}
-              className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="px-4 py-2 bg-primary md:w-[383px] w-full hover:bg-blue-600 text-white rounded-md disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               {isUpdating ? "Updating..." : "Update"}
             </button>
