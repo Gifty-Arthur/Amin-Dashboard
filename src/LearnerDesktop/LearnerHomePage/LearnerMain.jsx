@@ -8,6 +8,8 @@ import p1 from "../../assets/Leaners/p1.png";
 import p2 from "../../assets/Leaners/p2.png";
 import p3 from "../../assets/Leaners/p3.png";
 import { useState, useEffect, useRef } from "react";
+import bg2 from "../../assets/Leaners/bg2.png";
+import { TbLogin2 } from "react-icons/tb";
 
 const LearnerMain = () => {
   const [count, setCount] = useState(0);
@@ -119,10 +121,9 @@ const LearnerMain = () => {
             </div>
           </div>
           {/* image */}
-          <img src={h2} alt="" className="mt-8" />
+          <img src={h2} alt="" className="mt-8 px-4 sm:px-6 lg:px-20" />
         </div>
       </div>
-
       {/* we are pround */}
       <div className="flex flex-col items-center text-center mt-10">
         <HomeTitles text="We are proud" />
@@ -131,12 +132,86 @@ const LearnerMain = () => {
           us in celebrating innovation, growth, and success.
         </h2>
       </div>
-      <div ref={ref} className="mt-6 px-4 sm:px-6 lg:px-20">
+      <div ref={ref} className="mt-6 flex flex-row items-center justify-evenly">
         <div>
           <img src={p1} alt="" />
           <h1 className="text-2xl text-primary font-bold ml-5 ">{count}+</h1>
+          <p className="text-sm font-bold ml-2">Courses</p>
         </div>
-        <p className="text-sm font-bold ml-2">Courses</p>
+        <div>
+          <img src={p2} alt="" />
+          <h1 className="text-2xl text-primary font-bold ">200+</h1>
+          <p className="text-sm font-bold ">Course student</p>
+        </div>
+        <div>
+          <img src={p3} alt="" />
+          <h1 className="text-2xl text-primary font-bold ml-2 ">250+</h1>
+          <p className="text-sm font-bold ">Hours content</p>
+        </div>
+      </div>
+      {/* time to invest */}
+      <div className="mt-20 relative">
+        <img src={bg2} alt="" className="" />
+        <div className="absolute inset-0  px-20 flex flex-row items-center justify-between">
+          <div>
+            <h1 className="text-white text-3xl font-bold">
+              It's time to start investing in yourself
+            </h1>
+            <p className="text-white  text-sm  mt-4">
+              Online courses open the opportunity for learning to almost anyone,
+              regardless of their scheduling <br />
+              commitments.
+            </p>
+          </div>
+          <button className="md:w-[137px]  border-white border-2 w-full h-[48px] font-semibold hover:text-primary  mt-4 bg-primary rounded-sm text-white hover:bg-[#E6EFF5] cursor-pointer">
+            Get Started
+          </button>
+        </div>
+      </div>
+
+      {/* choose your Course */}
+      <div className=" px-20 mt-20">
+        <div className="md:w-[508px] w-full h-[152px] border-l-4 rounded-md border-primary flex items-center justify-center  shadow-2xl bg-white">
+          <div className="flex flex-row items-center gap-10">
+            <TbLogin2 size={48} className=" text-primary " />
+            <div>
+              <h1 className="text-black text-2xl font-bold">
+                Sign Up and Choose Your Course
+              </h1>
+              <p>
+                Create your account quickly with just your email <br />
+                or social media login, then explore a wide range{" "}
+              </p>
+            </div>
+          </div>
+        </div>
+        <div className="md:w-[508px] w-full h-[152px] rounded-lg mt-4 flex items-center justify-center  shadow-2xl bg-white">
+          <div className="flex flex-row items-center gap-10">
+            <TbLogin2 size={48} className=" text-primary " />
+            <div>
+              <h1 className="text-black text-2xl font-bold">Onboarding </h1>
+              <p>
+                Get started seamlessly with a smooth onboarding <br />
+                experience. Learn the essentials and set yourself up for success
+                from day one.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div className="md:w-[508px] w-full h-[152px] mt-10 rounded-lg flex items-center justify-center  shadow-2xl bg-white">
+          <div className="flex flex-row items-center gap-10">
+            <TbLogin2 size={48} className=" text-primary " />
+            <div>
+              <h1 className="text-black text-2xl font-bold">
+                Sign Up and Choose Your Course
+              </h1>
+              <p>
+                Create your account quickly with just your email <br />
+                or social media login, then explore a wide range{" "}
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
