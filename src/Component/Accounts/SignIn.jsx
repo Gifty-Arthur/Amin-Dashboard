@@ -6,92 +6,49 @@ import { useNavigate, Link } from "react-router-dom";
 
 const SignIn = () => {
   const navigate = useNavigate();
-
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
-
+  const [formData, setFormData] = useState({ email: "", password: "" });
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
 
-  // Handle input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-
+    setFormData((prev) => ({ ...prev, [name]: value }));
     if (errors[name]) {
-      setErrors((prev) => ({
-        ...prev,
-        [name]: "",
-      }));
+      setErrors((prev) => ({ ...prev, [name]: "" }));
     }
   };
 
-  // Validate form data
-  const validateForm = () => {
-    const newErrors = {};
-    if (!formData.email.trim()) {
-      newErrors.email = "Email is required";
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = "Email is invalid";
-    }
-    if (!formData.password) {
-      newErrors.password = "Password is required";
-    }
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!validateForm()) {
-      return;
-    }
-
     setIsLoading(true);
-    setErrors({}); // Clear previous submission errors
+    setErrors({});
 
     try {
       const apiUrl = "/api/auth/login";
       const response = await fetch(apiUrl, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: formData.email,
-          password: formData.password,
-        }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
       });
 
       const data = await response.json();
 
       if (response.ok) {
-        // Success - store token if provided and redirect
         if (data.token) {
-          // ✅ CORRECTED: Save with the key 'token' to match the service file.
           localStorage.setItem("token", data.token);
         }
+        if (data.user) {
+          localStorage.setItem("user", JSON.stringify(data.user));
+        }
+
         alert("Login successful!");
-        navigate("/"); // Navigate to the homepage or dashboard
+        navigate("/"); // Navigate to the dashboard
       } else {
-        // Handle API errors (e.g., wrong password)
-        setErrors({
-          submit:
-            data.message || "Login failed. Please check your credentials.",
-        });
+        setErrors({ submit: data.message || "Login failed." });
       }
     } catch (error) {
-      // Handle network errors
-      setErrors({
-        submit: "A network error occurred. Please try again later.",
-      });
-      console.error("Login error details:", error);
+      setErrors({ submit: "An unexpected error occurred." });
+      console.error("Login error:", error);
     } finally {
       setIsLoading(false);
     }
@@ -147,7 +104,6 @@ const SignIn = () => {
                 <p className="mt-1 text-sm text-red-600">{errors.email}</p>
               )}
             </div>
-
             <div>
               <label
                 htmlFor="password"
@@ -170,7 +126,6 @@ const SignIn = () => {
                 <p className="mt-1 text-sm text-red-600">{errors.password}</p>
               )}
             </div>
-
             <div className="mb-2">
               <Link
                 to="/forgot-password"
@@ -179,12 +134,10 @@ const SignIn = () => {
                 Forgot Password?
               </Link>
             </div>
-
             <AccountButtons type="submit" disabled={isLoading}>
               {isLoading ? "Logging in..." : "Login"}
             </AccountButtons>
           </form>
-
           <p className="mt-6 text-center text-gray-600 text-sm">
             Don't have an account?{" "}
             <Link to="/signup" className="text-primary hover:underline">

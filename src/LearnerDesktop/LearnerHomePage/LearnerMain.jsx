@@ -171,47 +171,54 @@ const LearnerMain = () => {
 
       {/* choose your Course */}
       <div className=" px-20 mt-20">
-        <div className="md:w-[508px] w-full h-[152px] border-l-4 rounded-md border-primary flex items-center justify-center  shadow-2xl bg-white">
-          <div className="flex flex-row items-center gap-10">
-            <TbLogin2 size={48} className=" text-primary " />
-            <div>
-              <h1 className="text-black text-2xl font-bold">
-                Sign Up and Choose Your Course
-              </h1>
-              <p>
-                Create your account quickly with just your email <br />
-                or social media login, then explore a wide range{" "}
-              </p>
+        <div>
+          <div className="md:w-[508px] w-full h-[152px] border-l-4 rounded-md border-primary flex items-center justify-center  shadow-2xl bg-white">
+            <div className="flex flex-row items-center gap-10">
+              <TbLogin2 size={48} className=" text-primary " />
+              <div>
+                <h1 className="text-black text-2xl font-bold">
+                  Sign Up and Choose Your Course
+                </h1>
+                <p>
+                  Create your account quickly with just your email <br />
+                  or social media login, then explore a wide range{" "}
+                </p>
+              </div>
+            </div>
+          </div>
+          <div className="md:w-[508px] w-full h-[152px] rounded-lg mt-4 flex items-center justify-center  shadow-2xl bg-white">
+            <div className="flex flex-row items-center gap-10">
+              <TbLogin2 size={48} className=" text-primary " />
+              <div>
+                <h1 className="text-black text-2xl font-bold">Onboarding </h1>
+                <p>
+                  Get started seamlessly with a smooth onboarding <br />
+                  experience. Learn the essentials and set yourself <br />
+                  up for success from day one.
+                </p>
+              </div>
+            </div>
+          </div>
+          <div className="md:w-[508px] w-full h-[152px] mt-10 rounded-lg flex items-center justify-center  shadow-2xl bg-white">
+            <div className="flex flex-row items-center gap-10">
+              <TbLogin2 size={48} className=" text-primary " />
+              <div>
+                <h1 className="text-black text-2xl font-bold">
+                  Start Learning{" "}
+                </h1>
+                <p>
+                  Start your learning journey with practical, hands-
+                  <br />
+                  on experience. Develop the skills needed to build
+                  <br /> implement, and manage effective solutions.
+                </p>
+              </div>
             </div>
           </div>
         </div>
-        <div className="md:w-[508px] w-full h-[152px] rounded-lg mt-4 flex items-center justify-center  shadow-2xl bg-white">
-          <div className="flex flex-row items-center gap-10">
-            <TbLogin2 size={48} className=" text-primary " />
-            <div>
-              <h1 className="text-black text-2xl font-bold">Onboarding </h1>
-              <p>
-                Get started seamlessly with a smooth onboarding <br />
-                experience. Learn the essentials and set yourself <br />
-                up for success from day one.
-              </p>
-            </div>
-          </div>
-        </div>
-        <div className="md:w-[508px] w-full h-[152px] mt-10 rounded-lg flex items-center justify-center  shadow-2xl bg-white">
-          <div className="flex flex-row items-center gap-10">
-            <TbLogin2 size={48} className=" text-primary " />
-            <div>
-              <h1 className="text-black text-2xl font-bold">Start Learning </h1>
-              <p>
-                Start your learning journey with practical, hands-
-                <br />
-                on experience. Develop the skills needed to build
-                <br /> implement, and manage effective solutions.
-              </p>
-            </div>
-          </div>
-        </div>
+
+        {/* lo */}
+        <div className="rounded-md w-[508px]"></div>
       </div>
     </div>
   );

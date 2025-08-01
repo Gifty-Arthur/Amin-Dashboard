@@ -21,25 +21,28 @@ const getAuthConfig = () => {
 };
 
 /**
- * Fetches all courses from the API.
+ * Fetches all courses from the API. (Requires Authentication)
  */
 export const getAllCourses = async () => {
-  const response = await axios.get(API_BASE_URL);
+  const config = getAuthConfig(); // Added authentication
+  const response = await axios.get(API_BASE_URL, config);
   // Assuming the API returns an object like { success: true, courses: [...] }
   return response.data.courses || response.data;
 };
 
 /**
- * Fetches a single course by its ID.
+ * Fetches a single course by its ID. (Requires Authentication)
  * @param {string} courseId - The ID of the course.
  */
 export const getCourseById = async (courseId) => {
-  const response = await axios.get(`${API_BASE_URL}/${courseId}`);
+  const config = getAuthConfig(); // Added authentication
+  const response = await axios.get(`${API_BASE_URL}/${courseId}`, config);
   return response.data.course || response.data;
 };
 
 /**
- * @param {FormData} courseData -
+ * Creates a new course. (Requires Authentication)
+ * @param {FormData} courseData - The course data, including image file.
  */
 export const createCourse = async (courseData) => {
   const config = getAuthConfig();
@@ -48,8 +51,9 @@ export const createCourse = async (courseData) => {
 };
 
 /**
- * @param {string} courseId
- * @param {FormData} courseData
+ * Updates an existing course. (Requires Authentication)
+ * @param {string} courseId - The ID of the course to update.
+ * @param {FormData} courseData - The updated course data.
  */
 export const updateCourse = async (courseId, courseData) => {
   const config = getAuthConfig();
