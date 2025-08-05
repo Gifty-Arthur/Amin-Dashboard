@@ -42,7 +42,7 @@ const SignIn = () => {
         }
 
         alert("Login successful!");
-        navigate("/"); // Navigate to the dashboard
+        navigate("/dashboard"); // Navigate to the dashboard
       } else {
         setErrors({ submit: data.message || "Login failed." });
       }

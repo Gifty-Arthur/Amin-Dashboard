@@ -241,9 +241,11 @@ const AddNewCourse = ({ isOpen, onClose, onCourseAdded }) => {
     setImageFile(e.target.files[0]);
   };
 
+  // In Courses.jsx, inside the UpdateCourseModal component
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsSubmitting(true);
+    setIsUpdating(true);
     setError("");
     try {
       const submissionData = new FormData();
@@ -253,15 +255,28 @@ const AddNewCourse = ({ isOpen, onClose, onCourseAdded }) => {
       if (imageFile) {
         submissionData.append("image", imageFile);
       }
-      const newCourseData = await createCourse(submissionData);
-      onCourseAdded(newCourseData.course || newCourseData.data);
-    } catch (err) {
-      setError(
-        err.response?.data?.errors?.[0]?.message || "Failed to create course."
+
+      const responseData = await updateCourse(course._id, submissionData);
+
+      // ✅ CORRECTED LOGIC:
+      // Find the full track object from the list we fetched for the dropdown
+      const selectedTrackObject = allTracks.find(
+        (t) => t._id === formData.track
       );
+
+      // Manually create the correct updated object
+      const manuallyUpdatedCourse = {
+        ...course, // Start with the original course data
+        ...(responseData.course || responseData.data), // Apply updates from the API
+        track: selectedTrackObject || course.track, // Ensure the track is the full object
+      };
+
+      onCourseAdded(manuallyUpdatedCourse);
+    } catch (err) {
+      setError("Failed to update course.");
       console.error(err);
     } finally {
-      setIsSubmitting(false);
+      setIsUpdating(false);
     }
   };
 
