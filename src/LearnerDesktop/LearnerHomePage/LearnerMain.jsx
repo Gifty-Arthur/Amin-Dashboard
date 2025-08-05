@@ -10,6 +10,11 @@ import p3 from "../../assets/Leaners/p3.png";
 import { useState, useEffect, useRef } from "react";
 import bg2 from "../../assets/Leaners/bg2.png";
 import { TbLogin2 } from "react-icons/tb";
+import s1 from "../../assets/Leaners/s1.png";
+import s2 from "../../assets/Leaners/s2.png";
+import c1 from "../../assets/Leaners/c1.png";
+import c2 from "../../assets/Leaners/c2.png";
+import c3 from "../../assets/Leaners/c3.png";
 
 const LearnerMain = () => {
   const [count, setCount] = useState(0);
@@ -171,54 +176,98 @@ const LearnerMain = () => {
 
       {/* choose your Course */}
       <div className=" px-20 mt-20">
-        <div>
-          <div className="md:w-[508px] w-full h-[152px] border-l-4 rounded-md border-primary flex items-center justify-center  shadow-2xl bg-white">
-            <div className="flex flex-row items-center gap-10">
-              <TbLogin2 size={48} className=" text-primary " />
-              <div>
-                <h1 className="text-black text-2xl font-bold">
-                  Sign Up and Choose Your Course
-                </h1>
-                <p>
-                  Create your account quickly with just your email <br />
-                  or social media login, then explore a wide range{" "}
-                </p>
+        <div className="flex flex-row items-center justify-between ">
+          <div>
+            <div className="md:w-[508px] w-full h-[152px] border-l-4 rounded-md border-primary flex items-center justify-center  shadow-2xl bg-white">
+              <div className="flex flex-row items-center gap-10">
+                <TbLogin2 size={48} className=" text-primary " />
+                <div>
+                  <h1 className="text-black text-2xl font-bold">
+                    Sign Up and Choose Your Course
+                  </h1>
+                  <p>
+                    Create your account quickly with just your email <br />
+                    or social media login, then explore a wide range{" "}
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div className="md:w-[508px] w-full h-[152px] rounded-lg mt-4 flex items-center justify-center  shadow-2xl bg-white">
+              <div className="flex flex-row items-center gap-10">
+                <TbLogin2 size={48} className=" text-primary " />
+                <div>
+                  <h1 className="text-black text-2xl font-bold">Onboarding </h1>
+                  <p>
+                    Get started seamlessly with a smooth onboarding <br />
+                    experience. Learn the essentials and set yourself <br />
+                    up for success from day one.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div className="md:w-[508px] w-full h-[152px] mt-10 rounded-lg flex items-center justify-center  shadow-2xl bg-white">
+              <div className="flex flex-row items-center gap-10">
+                <TbLogin2 size={48} className=" text-primary " />
+                <div>
+                  <h1 className="text-black text-2xl font-bold">
+                    Start Learning{" "}
+                  </h1>
+                  <p>
+                    Start your learning journey with practical, hands-
+                    <br />
+                    on experience. Develop the skills needed to build
+                    <br /> implement, and manage effective solutions.
+                  </p>
+                </div>
               </div>
             </div>
           </div>
-          <div className="md:w-[508px] w-full h-[152px] rounded-lg mt-4 flex items-center justify-center  shadow-2xl bg-white">
-            <div className="flex flex-row items-center gap-10">
-              <TbLogin2 size={48} className=" text-primary " />
+          {/* lo */}
+          <div className="rounded-md w-[508px] h-[616px] shadow-2xl bg-white  mb-10 ">
+            <div className="flex flex-row items-center justify-between p-4">
               <div>
-                <h1 className="text-black text-2xl font-bold">Onboarding </h1>
-                <p>
-                  Get started seamlessly with a smooth onboarding <br />
-                  experience. Learn the essentials and set yourself <br />
-                  up for success from day one.
-                </p>
+                <p className="text-center font-medium ">1</p>
+                <p className="text-md font-medium text-center">Secure Login</p>
+                <img src={s1} alt="" className="mt-6" />
+              </div>
+              <div>
+                <p className="text-center font-medium">2</p>
+                <p className="text-md font-medium">Authentication</p>
+                <img src={s2} alt="" className="mt-6" />
               </div>
             </div>
-          </div>
-          <div className="md:w-[508px] w-full h-[152px] mt-10 rounded-lg flex items-center justify-center  shadow-2xl bg-white">
-            <div className="flex flex-row items-center gap-10">
-              <TbLogin2 size={48} className=" text-primary " />
-              <div>
-                <h1 className="text-black text-2xl font-bold">
-                  Start Learning{" "}
-                </h1>
-                <p>
-                  Start your learning journey with practical, hands-
-                  <br />
-                  on experience. Develop the skills needed to build
-                  <br /> implement, and manage effective solutions.
-                </p>
+
+            {/* 3 */}
+            <div>
+              <p className=" font-medium p-4 text-center ">3</p>
+              <p className="text-md font-medium text-center ">
+                Choose a Course
+              </p>
+              <div className="flex flex-row items-center justify-center mt-4">
+                <div className="ml-6 md:w-[207px] h-[]120px bg-white shadow-2xl rounded-md">
+                  <img src={c1} alt="" className="mt-6 ml-2" />
+                  <h1 className="text-lg font-bold p-2">Software Developmet</h1>
+                  <p className="text-sm p-1">
+                    Unlock your potential with comprehensive training in modern
+                    software development
+                  </p>
+                  <p className="font-bold text-md mt-2 p-2">Price: $350</p>
+                </div>
+                <div className="ml-6 md:w-[207px] h-[]120px bg-white shadow-2xl rounded-md">
+                  <img src={c2} alt="" className="mt-6 ml-2" />
+                  <h1 className="text-lg font-bold p-2">
+                    Data Science Mastery
+                  </h1>
+                  <p className="text-sm p-1">
+                    Equip yourself with the skills to analyze, interpret, and
+                    leverage data, becoming an expert.
+                  </p>
+                  <p className="font-bold text-md mt-2 p-2">Price: $350</p>
+                </div>
               </div>
             </div>
           </div>
         </div>
-
-        {/* lo */}
-        <div className="rounded-md w-[508px]"></div>
       </div>
     </div>
   );
