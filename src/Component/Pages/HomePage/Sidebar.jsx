@@ -5,6 +5,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { LiaFileInvoiceSolid } from "react-icons/lia";
 import { CiLogout } from "react-icons/ci";
 import logo from "../../../assets/Images/Account/logo.png";
+import { logout } from "../../Accounts/LogoutService"; //
 
 const Sidebar = () => {
   const [user, setUser] = useState(null);
@@ -17,10 +18,18 @@ const Sidebar = () => {
     }
   }, []);
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    navigate("/login");
+  const handleLogout = async () => {
+    try {
+      await logout(); // Call the API to log out from the backend
+    } catch (error) {
+      console.error("Server logout failed:", error);
+      // We still proceed to log out on the frontend regardless
+    } finally {
+      // This part always runs
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      navigate("/login");
+    }
   };
 
   const getInitials = (user) => {

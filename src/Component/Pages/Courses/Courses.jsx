@@ -8,26 +8,29 @@ import Title from "../../Titles/titles";
 import Subt from "../../Titles/subt";
 import AddTask from "../../Buttons/AddTask";
 import SearchBar from "../../Buttons/Searchbar";
-import { getAllTracks } from "../Tracks/TrackService";
 import {
   getAllCourses,
   createCourse,
   updateCourse,
   deleteCourse,
 } from "./CourseServices";
+import { getAllTracks } from "../Tracks/TrackService";
 
 const Courses = () => {
+  // --- STATE DEFINITIONS ---
   const [courses, setCourses] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const coursesPerPage = 10;
 
+  // State for modals
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedCourse, setSelectedCourse] = useState(null);
 
+  // --- DATA FETCHING ---
   useEffect(() => {
     fetchCourses();
   }, []);
@@ -45,6 +48,7 @@ const Courses = () => {
     }
   };
 
+  // --- MODAL HANDLERS ---
   const handleAddClick = () => setIsAddModalOpen(true);
   const handleUpdateClick = (course) => {
     setSelectedCourse(course);
@@ -72,6 +76,7 @@ const Courses = () => {
     setIsDeleteModalOpen(false);
   };
 
+  // --- FILTERING & PAGINATION ---
   const filteredCourses = courses.filter((course) =>
     (course.title || "").toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -241,11 +246,9 @@ const AddNewCourse = ({ isOpen, onClose, onCourseAdded }) => {
     setImageFile(e.target.files[0]);
   };
 
-  // In Courses.jsx, inside the UpdateCourseModal component
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsUpdating(true);
+    setIsSubmitting(true);
     setError("");
     try {
       const submissionData = new FormData();
@@ -255,33 +258,19 @@ const AddNewCourse = ({ isOpen, onClose, onCourseAdded }) => {
       if (imageFile) {
         submissionData.append("image", imageFile);
       }
-
-      const responseData = await updateCourse(course._id, submissionData);
-
-      // ✅ CORRECTED LOGIC:
-      // Find the full track object from the list we fetched for the dropdown
-      const selectedTrackObject = allTracks.find(
-        (t) => t._id === formData.track
-      );
-
-      // Manually create the correct updated object
-      const manuallyUpdatedCourse = {
-        ...course, // Start with the original course data
-        ...(responseData.course || responseData.data), // Apply updates from the API
-        track: selectedTrackObject || course.track, // Ensure the track is the full object
-      };
-
-      onCourseAdded(manuallyUpdatedCourse);
+      const newCourseData = await createCourse(submissionData);
+      onCourseAdded(newCourseData.course || newCourseData.data);
     } catch (err) {
-      setError("Failed to update course.");
+      setError(
+        err.response?.data?.errors?.[0]?.message || "Failed to create course."
+      );
       console.error(err);
     } finally {
-      setIsUpdating(false);
+      setIsSubmitting(false);
     }
   };
 
   if (!isOpen) return null;
-
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
       <div className="bg-white p-6 rounded-lg w-full max-w-md max-h-[90vh] overflow-y-auto">

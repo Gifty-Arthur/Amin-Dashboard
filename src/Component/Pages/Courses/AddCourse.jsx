@@ -1,11 +1,7 @@
-// src/Component/Pages/Courses/AddCourse.jsx
-
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { IoClose } from "react-icons/io5";
 import { createCourse } from "./CourseServices";
-import { useEffect } from "react";
 import { getAllTracks } from "../Tracks/TrackService";
-import { useNavigate } from "react-router-dom"; // Make sure path is correct
 
 const AddCourse = ({ isOpen, onClose, onCourseAdded }) => {
   const [formData, setFormData] = useState({
@@ -25,7 +21,7 @@ const AddCourse = ({ isOpen, onClose, onCourseAdded }) => {
           const tracksData = await getAllTracks();
           setAllTracks(Array.isArray(tracksData) ? tracksData : []);
         } catch (err) {
-          console.error("Failed to fetch tracks for dropdown:", error);
+          console.error("Failed to fetch tracks for dropdown:", err);
         }
       };
       fetchTracksForDropdown();
@@ -43,12 +39,13 @@ const AddCourse = ({ isOpen, onClose, onCourseAdded }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsSubmitting(true);
     setError("");
     if (formData.description.trim().length < 10) {
       setError("Description must be at least 10 characters long.");
+      setIsSubmitting(false); // Make sure to stop submission
       return;
     }
+    setIsSubmitting(true);
     try {
       const submissionData = new FormData();
       submissionData.append("title", formData.title);
@@ -59,9 +56,14 @@ const AddCourse = ({ isOpen, onClose, onCourseAdded }) => {
       }
 
       const newCourseData = await createCourse(submissionData);
+
+      // ✅ CORRECTED: Call the functions to update the parent and close the modal
       onCourseAdded(newCourseData.course || newCourseData.data);
+      onClose();
     } catch (err) {
-      setError(err.response?.data?.error || "Failed to create course.");
+      setError(
+        err.response?.data?.errors?.[0]?.message || "Failed to create course."
+      );
       console.error(err);
     } finally {
       setIsSubmitting(false);
@@ -71,7 +73,7 @@ const AddCourse = ({ isOpen, onClose, onCourseAdded }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0  s flex items-center justify-center z-50 p-4">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
       <div className="bg-white p-6 rounded-lg w-full max-w-md max-h-[90vh] overflow-y-auto">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-bold">Add New Course</h2>
@@ -91,19 +93,8 @@ const AddCourse = ({ isOpen, onClose, onCourseAdded }) => {
               required
             />
           </div>
-          <div>
-            <label className="block mb-1 font-medium">Track ID</label>
-            <input
-              type="text"
-              name="track"
-              value={formData.track}
-              onChange={handleChange}
-              placeholder="Enter Track ID"
-              className="w-full p-2 border rounded"
-              required
-            />
-          </div>
 
+          {/* ✅ CORRECTED: Removed the redundant text input */}
           <div>
             <label className="block mb-1 font-medium">Track</label>
             <select
@@ -148,9 +139,16 @@ const AddCourse = ({ isOpen, onClose, onCourseAdded }) => {
           {error && <p className="text-red-500 mt-2 text-sm">{error}</p>}
           <div className="flex justify-end gap-4 pt-4">
             <button
+              type="button"
+              onClick={onClose}
+              className="px-4 py-2 bg-gray-200 rounded-md"
+            >
+              Cancel
+            </button>
+            <button
               type="submit"
-              disabled={isSubmitting}
-              className="px-4 py-2 bg-primary text-white rounded-md disabled:opacity-50"
+              disabled={isSubmitting} // This is controlled by the state
+              className="px-4 py-2 bg-blue-500 text-white rounded-md disabled:opacity-50 hover:bg-primary"
             >
               {isSubmitting ? "Creating..." : "Create Course"}
             </button>
