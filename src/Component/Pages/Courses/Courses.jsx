@@ -17,20 +17,17 @@ import {
 import { getAllTracks } from "../Tracks/TrackService";
 
 const Courses = () => {
-  // --- STATE DEFINITIONS ---
   const [courses, setCourses] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const coursesPerPage = 10;
 
-  // State for modals
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedCourse, setSelectedCourse] = useState(null);
 
-  // --- DATA FETCHING ---
   useEffect(() => {
     fetchCourses();
   }, []);
@@ -48,7 +45,6 @@ const Courses = () => {
     }
   };
 
-  // --- MODAL HANDLERS ---
   const handleAddClick = () => setIsAddModalOpen(true);
   const handleUpdateClick = (course) => {
     setSelectedCourse(course);
@@ -76,7 +72,6 @@ const Courses = () => {
     setIsDeleteModalOpen(false);
   };
 
-  // --- FILTERING & PAGINATION ---
   const filteredCourses = courses.filter((course) =>
     (course.title || "").toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -271,6 +266,7 @@ const AddNewCourse = ({ isOpen, onClose, onCourseAdded }) => {
   };
 
   if (!isOpen) return null;
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
       <div className="bg-white p-6 rounded-lg w-full max-w-md max-h-[90vh] overflow-y-auto">
@@ -399,7 +395,16 @@ const UpdateCourseModal = ({ course, onClose, onCourseUpdated }) => {
         submissionData.append("image", imageFile);
       }
       const updatedData = await updateCourse(course._id, submissionData);
-      onCourseUpdated(updatedData.course || updatedData.data);
+
+      const selectedTrackObject = allTracks.find(
+        (t) => t._id === formData.track
+      );
+      const manuallyUpdatedCourse = {
+        ...course,
+        ...(updatedData.course || updatedData.data),
+        track: selectedTrackObject || course.track,
+      };
+      onCourseUpdated(manuallyUpdatedCourse);
     } catch (err) {
       setError("Failed to update course.");
       console.error(err);
