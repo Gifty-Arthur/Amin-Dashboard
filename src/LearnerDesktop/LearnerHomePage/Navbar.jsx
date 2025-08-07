@@ -1,60 +1,81 @@
-import React from "react";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import logo from "../../assets/Images/Account/logo.png";
-import { Link } from "react-router";
-import { CiInboxIn, CiLogout } from "react-icons/ci";
-import { useNavigate } from "react-router-dom";
+import { FaChevronDown } from "react-icons/fa";
+import { useAuth } from "../LeanersAccount/AuthContext";
 
 const Navbar = () => {
   const navigate = useNavigate();
+  const { user, logout } = useAuth(); // 2. GET user and logout from context
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  const handleLogout = () => {
+    logout();
+    navigate("/learner-login");
+  };
 
   return (
-    <div>
-      <div className="flex items-center justify-between bg-white shadow-2xl p-4 px-20">
-        <div className="flex flex-row gap-10 ">
-          <img
-            src={logo}
-            alt="One C Logo"
-            className=" w-20 h-20 object-contain"
-          />{" "}
-          <div className="">
-            <ul className="flex flex-row gap-4 pt-7">
-              <Link
-                to=""
-                className="font-figtree text-black  hover:text-blue-400
-              "
-              >
-                Home
-              </Link>
-              <Link
-                to=""
-                className="font-figtree text-black  hover:text-blue-400
-              "
-              >
-                Courses
-              </Link>
-            </ul>
+    <div className="flex items-center justify-between bg-white shadow-md p-4 px-8 md:px-20">
+      {/* Logo and navigation links */}
+      <div className="flex items-center gap-10">
+        <img src={logo} alt="Logo" className="w-16 h-16 object-contain" />
+        <ul className="flex gap-4">
+          <Link to="/learner" className="font-semibold hover:text-primary">
+            Home
+          </Link>
+          <Link
+            to="/learner-tracks"
+            className="font-semibold hover:text-primary"
+          >
+            Tracks
+          </Link>
+        </ul>
+      </div>
+
+      <div className="flex items-center gap-6">
+        {user ? (
+          <div className="relative">
+            <button
+              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+              className="flex items-center gap-2 font-semibold"
+            >
+              {user.firstName} {user.lastName}
+              <FaChevronDown size={20} className="text-primary mt-1" />
+            </button>
+            {isDropdownOpen && (
+              <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
+                <Link
+                  to="/portal"
+                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 border-b hover:text-primary"
+                >
+                  Portal
+                </Link>
+                <button
+                  onClick={handleLogout}
+                  className="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                >
+                  Logout
+                </button>
+              </div>
+            )}
           </div>
-        </div>
-        {/* login */}
-
-        <div className="gap-6 flex">
-          <button
-            onClick={() => navigate("/learner-login")}
-            className="w-[125px] h-[48px] text-primary border-2 font-bold border-primary hover:bg-[#E6EFF5] cursor-pointer rounded-md"
-          >
-            Login
-          </button>
-
-          <button
-            onClick={() => navigate("/learners-signup")}
-            className="w-[139px] h-[48px]  font-bold text-white border-1 bg-primary border-primary hover:bg-[#E6EFF5] cursor-pointer hover:text-primary"
-          >
-            <div className="flex  gap-1 ml-8">
+        ) : (
+          // If user is not logged in, show Login and Signup buttons
+          <>
+            <button
+              onClick={() => navigate("/learner-login")}
+              className="px-8 py-2 text-primary border-2 font-bold border-primary hover:bg-blue-50 rounded-md"
+            >
+              Login
+            </button>
+            <button
+              onClick={() => navigate("/learner-signup")}
+              className="px-8 py-2 font-bold text-white bg-primary hover:opacity-90 rounded-md"
+            >
               Signup
-              <CiLogout size={24} className="mt-0.5" />
-            </div>
-          </button>
-        </div>
+            </button>
+          </>
+        )}
       </div>
     </div>
   );

@@ -25,129 +25,150 @@ import AddCourse from "./Component/Pages/Courses/AddCourse";
 import LearnerLogin from "./LearnerDesktop/LeanersAccount/LearnersLogin";
 import LearnersSignUp from "./LearnerDesktop/LeanersAccount/LearnersSignUp";
 import LearnsOTP from "./LearnerDesktop/LeanersAccount/LearnsOTP";
+import { AuthProvider } from "./LearnerDesktop/LeanersAccount/AuthContext";
+import LearnerTracks from "./LearnerDesktop/LearnerTracks/LearnerTracks";
+import Portal from "./LearnerDesktop/LearnerTracks/LearnerPortal/Portal";
 
 function App() {
   return (
-    <Routes>
-      {/* Auth pages - without sidebar */}
-      <Route
-        path="/learner"
-        element={
-          <WebsiteLayout>
-            <LearnerMain />
-          </WebsiteLayout>
-        }
-      />
-      <Route
-        path="/learner-login"
-        element={
-          <WebsiteLayout>
-            <LearnerLogin />
-          </WebsiteLayout>
-        }
-      />
-      <Route
-        path="/learners-signup"
-        element={
-          <WebsiteLayout>
-            <LearnersSignUp />
-          </WebsiteLayout>
-        }
-      />
-      <Route
-        path="/learner-otp"
-        element={
-          <WebsiteLayout>
-            <LearnsOTP />
-          </WebsiteLayout>
-        }
-      />
-      <Route path="/signup" element={<SignUp />} />
-      <Route path="/" element={<SignIn />} />
-      <Route path="/forgot-password" element={<ForgotPassword />} />
-      <Route path="/otp" element={<OTP />} />
-      <Route path="/adminresetpassword" element={<AdminResetPassword />} />
+    <AuthProvider>
+      <Routes>
+        {/* Auth pages - without sidebar */}
+        <Route
+          path="/learner"
+          element={
+            <WebsiteLayout>
+              <LearnerMain />
+            </WebsiteLayout>
+          }
+        />
+        <Route
+          path="/learner-login"
+          element={
+            <WebsiteLayout>
+              <LearnerLogin />
+            </WebsiteLayout>
+          }
+        />
+        <Route
+          path="/learners-signup"
+          element={
+            <WebsiteLayout>
+              <LearnersSignUp />
+            </WebsiteLayout>
+          }
+        />
+        <Route
+          path="/learner-otp"
+          element={
+            <WebsiteLayout>
+              <LearnsOTP />
+            </WebsiteLayout>
+          }
+        />
+        <Route
+          path="/learner-tracks"
+          element={
+            <WebsiteLayout>
+              <LearnerTracks />
+            </WebsiteLayout>
+          }
+        />
+        <Route
+          path="/portal"
+          element={
+            <WebsiteLayout>
+              <Portal />
+            </WebsiteLayout>
+          }
+        />
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/" element={<SignIn />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/otp" element={<OTP />} />
+        <Route path="/adminresetpassword" element={<AdminResetPassword />} />
 
-      <Route path="/reset-password/:token" element={<AdminResetPassword />} />
-      <Route path="/reset-password" element={<AdminResetPassword />} />
-      <Route path="/add-new-track" element={<AddNewTrack />} />
-      <Route path="/add-course" element={<AddCourse />} />
+        <Route path="/reset-password/:token" element={<AdminResetPassword />} />
+        <Route path="/reset-password" element={<AdminResetPassword />} />
+        <Route path="/add-new-track" element={<AddNewTrack />} />
+        <Route path="/add-course" element={<AddCourse />} />
 
-      <Route
-        path="/trek"
-        element={
-          <DashboardLayout>
-            <Trek />
-          </DashboardLayout>
-        }
-      />
+        <Route
+          path="/trek"
+          element={
+            <DashboardLayout>
+              <Trek />
+            </DashboardLayout>
+          }
+        />
 
-      <Route
-        path="/email-verification/:token"
-        element={<EmailVerification />}
-      />
+        <Route
+          path="/email-verification/:token"
+          element={<EmailVerification />}
+        />
 
-      {/* Pages with sidebar */}
-      <Route
-        path="/dashboard"
-        element={
-          <DashboardLayout>
-            <Home />
-          </DashboardLayout>
-        }
-      />
-      <Route
-        path="/invoice"
-        element={
-          <DashboardLayout>
-            <Invoices />
-          </DashboardLayout>
-        }
-      />
-      <Route
-        path="/learners"
-        element={
-          <DashboardLayout>
-            <Learners />
-          </DashboardLayout>
-        }
-      />
-      <Route
-        path="/trackdetails/:trackId" // <-- ADD THIS ROUTE
-        element={
-          <DashboardLayout>
-            <TrackDetails />
-          </DashboardLayout>
-        }
-      />
+        {/* Pages with sidebar */}
+        <Route
+          path="/dashboard"
+          element={
+            <DashboardLayout>
+              <Home />
+            </DashboardLayout>
+          }
+        />
+        <Route
+          path="/invoice"
+          element={
+            <DashboardLayout>
+              <Invoices />
+            </DashboardLayout>
+          }
+        />
+        <Route
+          path="/learners"
+          element={
+            <DashboardLayout>
+              <Learners />
+            </DashboardLayout>
+          }
+        />
+        <Route
+          path="/trackdetails/:trackId" // <-- ADD THIS ROUTE
+          element={
+            <DashboardLayout>
+              <TrackDetails />
+            </DashboardLayout>
+          }
+        />
 
-      <Route
-        path="/track"
-        element={
-          <DashboardLayout>
-            <Track />
-          </DashboardLayout>
-        }
-      />
+        <Route
+          path="/track"
+          element={
+            <DashboardLayout>
+              <Track />
+            </DashboardLayout>
+          }
+        />
 
-      <Route
-        path="/courses"
-        element={
-          <DashboardLayout>
-            <Courses />
-          </DashboardLayout>
-        }
-      />
+        <Route
+          path="/courses"
+          element={
+            <DashboardLayout>
+              <Courses />
+            </DashboardLayout>
+          }
+        />
 
-      <Route
-        path="/report"
-        element={
-          <DashboardLayout>
-            <Report />
-          </DashboardLayout>
-        }
-      />
-    </Routes>
+        <Route
+          path="/report"
+          element={
+            <DashboardLayout>
+              <Report />
+            </DashboardLayout>
+          }
+        />
+      </Routes>
+    </AuthProvider>
   );
 }
 
