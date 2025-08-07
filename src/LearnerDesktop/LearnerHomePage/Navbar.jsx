@@ -2,8 +2,11 @@ import React from "react";
 import logo from "../../assets/Images/Account/logo.png";
 import { Link } from "react-router";
 import { CiInboxIn, CiLogout } from "react-icons/ci";
+import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
+  const navigate = useNavigate();
+
   return (
     <div>
       <div className="flex items-center justify-between bg-white shadow-2xl p-4 px-20">
@@ -35,10 +38,17 @@ const Navbar = () => {
         {/* login */}
 
         <div className="gap-6 flex">
-          <button className="w-[125px] h-[48px] text-primary border-1  font-bold border-primary hover:bg-[#E6EFF5] cursor-pointer ">
+          <button
+            onClick={() => navigate("/learner-login")}
+            className="w-[125px] h-[48px] text-primary border-2 font-bold border-primary hover:bg-[#E6EFF5] cursor-pointer rounded-md"
+          >
             Login
           </button>
-          <button className="w-[139px] h-[48px]  font-bold text-white border-1 bg-primary border-primary hover:bg-[#E6EFF5] cursor-pointer hover:text-primary">
+
+          <button
+            onClick={() => navigate("/learners-signup")}
+            className="w-[139px] h-[48px]  font-bold text-white border-1 bg-primary border-primary hover:bg-[#E6EFF5] cursor-pointer hover:text-primary"
+          >
             <div className="flex  gap-1 ml-8">
               Signup
               <CiLogout size={24} className="mt-0.5" />

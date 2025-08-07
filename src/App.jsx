@@ -22,6 +22,9 @@ import WebsiteLayout from "./LearnerDesktop/WebsiteLayout";
 import LearnerMain from "./LearnerDesktop/LearnerHomePage/LearnerMain";
 import Trek from "./Component/Pages/Tracks/Trek";
 import AddCourse from "./Component/Pages/Courses/AddCourse";
+import LearnerLogin from "./LearnerDesktop/LeanersAccount/LearnersLogin";
+import LearnersSignUp from "./LearnerDesktop/LeanersAccount/LearnersSignUp";
+import LearnsOTP from "./LearnerDesktop/LeanersAccount/LearnsOTP";
 
 function App() {
   return (
@@ -32,6 +35,30 @@ function App() {
         element={
           <WebsiteLayout>
             <LearnerMain />
+          </WebsiteLayout>
+        }
+      />
+      <Route
+        path="/learner-login"
+        element={
+          <WebsiteLayout>
+            <LearnerLogin />
+          </WebsiteLayout>
+        }
+      />
+      <Route
+        path="/learners-signup"
+        element={
+          <WebsiteLayout>
+            <LearnersSignUp />
+          </WebsiteLayout>
+        }
+      />
+      <Route
+        path="/learner-otp"
+        element={
+          <WebsiteLayout>
+            <LearnsOTP />
           </WebsiteLayout>
         }
       />
