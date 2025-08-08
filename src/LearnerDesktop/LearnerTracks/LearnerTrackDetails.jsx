@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
-import { FaStar, FaPlayCircle, FaCertificate } from "react-icons/fa";
-import { getTrackById } from "../../Component/Pages/Tracks/TrackService";
+import { useParams, Link, useNavigate } from "react-router-dom";
+import { FaStar, FaPlayCircle } from "react-icons/fa";
+import {
+  getTrackById,
+  getAllTracks,
+} from "../../Component/Pages/Tracks/TrackService";
 import { LuGraduationCap } from "react-icons/lu";
 import { MdDateRange } from "react-icons/md";
 import { IoCheckmarkCircleSharp } from "react-icons/io5";
@@ -21,32 +24,24 @@ const DetailsCard = ({ track }) => (
       <ul className="space-y-3 text-sm text-gray-700">
         <li className="flex items-center justify-between gap-3">
           <span className="flex items-center gap-3">
-            {" "}
             <FaPlayCircle /> Duration:
           </span>
           <span>{track.duration}</span>
         </li>
         <li className="flex items-center justify-between gap-3 mt-2">
           <span className="flex items-center gap-3">
-            {" "}
-            <LuGraduationCap />
-            Courses
+            <LuGraduationCap /> Courses
           </span>
-          <span>4</span>
+          <span>{track.courses?.length || 0}</span>
         </li>
         <li className="flex items-center justify-between gap-3 mt-6">
           <span className="flex items-center gap-3">
-            {" "}
-            <MdDateRange />
-            Date
+            <MdDateRange /> Date
           </span>
           <span>{new Date(track.updatedAt).toLocaleDateString()}</span>
         </li>
       </ul>
-      <h2 className="text-3xl font-bold text-center mt-4 ">
-        ${track.price}.00
-      </h2>
-
+      <h2 className="text-3xl font-bold text-center mt-4">${track.price}</h2>
       <button className="w-full bg-primary text-white font-bold py-3 rounded-lg hover:bg-opacity-90 transition-colors mt-4">
         Enroll Now
       </button>
@@ -54,36 +49,69 @@ const DetailsCard = ({ track }) => (
   </div>
 );
 
+// --- Sub-component for the related track cards ---
+const TrackCard = ({ track }) => {
+  const navigate = useNavigate();
+
+  return (
+    <div
+      onClick={() => navigate(`/learner-track-details/${track._id}`)}
+      className="group block cursor-pointer h-full"
+    >
+      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden h-full flex flex-col">
+        <div className="h-48 relative overflow-hidden flex-shrink-0">
+          <img
+            src={track.image}
+            alt={track.name}
+            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+          />
+        </div>
+        <div className="p-6 flex flex-col flex-1">
+          <h3 className="font-bold text-lg text-gray-800">{track.name}</h3>
+          <p className="text-gray-600 text-sm mt-2 leading-relaxed flex-grow line-clamp-3">
+            {track.description}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const LearnerTrackDetails = () => {
   const [track, setTrack] = useState(null);
+  const [allTracks, setAllTracks] = useState([]); // Use a different name for the list
   const [loading, setLoading] = useState(true);
   const { trackId } = useParams();
 
   useEffect(() => {
-    const fetchTrack = async () => {
+    const fetchTrackData = async () => {
       try {
+        setLoading(true);
+        setTrack(null); // 2. CLEAR PREVIOUS TRACK to prevent crash
+
         if (trackId) {
-          const data = await getTrackById(trackId);
-          setTrack(data);
+          const singleTrackData = await getTrackById(trackId);
+          setTrack(singleTrackData);
         }
+        const allTracksData = await getAllTracks();
+        setAllTracks(Array.isArray(allTracksData) ? allTracksData : []);
       } catch (error) {
-        console.error("Failed to fetch track details:", error);
+        console.error("Failed to fetch track data:", error);
       } finally {
         setLoading(false);
       }
     };
-    fetchTrack();
+    fetchTrackData();
   }, [trackId]);
 
-  if (loading) {
-    return <div className="text-center py-20">Loading...</div>;
-  }
+  if (loading) return <div className="text-center py-20">Loading...</div>;
+  if (!track) return <div className="text-center py-20">Track not found.</div>;
 
-  if (!track) {
-    return <div className="text-center py-20">Track not found.</div>;
-  }
+  // Create the related tracks list, excluding the current one
+  const relatedTracks = allTracks
+    .filter((t) => t._id !== track._id)
+    .slice(0, 4);
 
-  // Calculate average rating to display
   const averageRating = track.ratings?.length
     ? (
         track.ratings.reduce((acc, r) => acc + r.rating, 0) /
@@ -96,7 +124,6 @@ const LearnerTrackDetails = () => {
       {/* --- Hero Section --- */}
       <div className="w-full bg-primary text-white py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Breadcrumb Navigation */}
           <div className="flex gap-2 text-sm mb-4">
             <Link to="/learner" className="hover:text-blue-200">
               Home
@@ -108,31 +135,25 @@ const LearnerTrackDetails = () => {
           </div>
           <h1 className="text-4xl font-bold">{track.name}</h1>
           <p className="mt-2 max-w-3xl">{track.description}</p>
-          <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm"></div>
+          <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
+            <span className="font-bold">{averageRating}</span>
+            <div className="flex items-center text-yellow-400">
+              {[...Array(5)].map((_, i) => (
+                <FaStar
+                  key={i}
+                  className={
+                    i < Math.floor(averageRating)
+                      ? "text-yellow-400"
+                      : "text-gray-300"
+                  }
+                />
+              ))}
+            </div>
+            <span>({track.ratings?.length || 0} ratings)</span>
+            <span>50 Students (Placeholder)</span>
+          </div>
           <div className="mt-2 text-sm flex items-center gap-x-4">
-            <div>
-              <p>Instructor</p>
-              <span className="font-bold"> {track.instructor}</span>
-            </div>
-            <div>
-              <p>Enrolled student</p>
-              <span className="font-bold">50</span>
-            </div>
-            <span>
-              <span>({track.ratings?.length || 0} ratings)</span>
-              <div className="flex items-center text-yellow-400">
-                {[...Array(5)].map((_, i) => (
-                  <FaStar
-                    key={i}
-                    className={
-                      i < Math.floor(averageRating)
-                        ? "text-yellow-400"
-                        : "text-gray-300"
-                    }
-                  />
-                ))}
-              </div>
-            </span>
+            <span>Created by {track.instructor}</span>
           </div>
         </div>
       </div>
@@ -142,9 +163,9 @@ const LearnerTrackDetails = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
           {/* Left Column */}
           <div className="lg:col-span-2">
-            {/* Placeholder content */}
             <div className="border border-gray-200 p-6 rounded-lg">
               <h3 className="text-2xl font-bold mb-4">What you'll learn</h3>
+              {/* Placeholder Content */}
               <ul className="grid grid-cols-1 md:grid-cols gap-4">
                 <li className="flex items-start gap-3">
                   <IoCheckmarkCircleSharp className="text-green-500 mt-1 flex-shrink-0" />
@@ -154,19 +175,20 @@ const LearnerTrackDetails = () => {
                   <IoCheckmarkCircleSharp className="text-green-500 mt-1 flex-shrink-0" />
                   <span>
                     Deploying and managing applications in AWS, Azure, and GCP.
+                     {" "}
                   </span>
                 </li>
                 <li className="flex items-start gap-3">
                   <IoCheckmarkCircleSharp className="text-green-500 mt-1 flex-shrink-0" />
                   <span>
-                    Infrastructure as Code (Terraform, CloudFormation).{" "}
+                    Infrastructure as Code (Terraform, CloudFormation).
                   </span>
                 </li>
                 <li className="flex items-start gap-3">
                   <IoCheckmarkCircleSharp className="text-green-500 mt-1 flex-shrink-0" />
                   <span>
-                    Serverless computing with AWS Lambda, Azure Functions, and
-                    Google Cloud Functions.
+                    computing with AWS Lambda, Azure Functions, and Google Cloud
+                    Functions.
                   </span>
                 </li>
                 <li className="flex items-start gap-3">
@@ -179,7 +201,7 @@ const LearnerTrackDetails = () => {
                 <li className="flex items-start gap-3">
                   <IoCheckmarkCircleSharp className="text-green-500 mt-1 flex-shrink-0" />
                   <span>
-                    CI/CD pipelines and automation for cloud-based applications.{" "}
+                    CI/CD pipelines and automation for cloud-based applications.
                   </span>
                 </li>
               </ul>
@@ -187,8 +209,18 @@ const LearnerTrackDetails = () => {
           </div>
 
           {/* Right Column */}
-          <div className="">
+          <div>
             <DetailsCard track={track} />
+          </div>
+        </div>
+
+        {/* Explore Related Courses Section */}
+        <div className="mt-12">
+          <h2 className="text-2xl font-bold mb-6">Explore Related Courses</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {relatedTracks.map((relatedTrack) => (
+              <TrackCard key={relatedTrack._id} track={relatedTrack} />
+            ))}
           </div>
         </div>
       </div>
