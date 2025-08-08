@@ -16,7 +16,7 @@ const TrackCard = ({ track }) => {
 
   const handleNavigation = (e) => {
     e.stopPropagation();
-    navigate(`/learner/tracks/${track._id}`);
+    navigate(`/learner-track-details/${track._id}`);
   };
 
   return (
