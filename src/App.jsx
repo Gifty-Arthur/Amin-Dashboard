@@ -29,6 +29,7 @@ import { AuthProvider } from "./LearnerDesktop/LeanersAccount/AuthContext";
 import LearnerTracks from "./LearnerDesktop/LearnerTracks/LearnerTracks";
 import Portal from "./LearnerDesktop/LearnerPortal/Portal";
 import LearnerTrackDetails from "./LearnerDesktop/LearnerTracks/LearnerTrackDetails";
+import CheckOut from "./LearnerDesktop/CheckOut/CheckOut";
 
 function App() {
   return (
@@ -89,6 +90,14 @@ function App() {
           element={
             <WebsiteLayout>
               <LearnerTrackDetails />
+            </WebsiteLayout>
+          }
+        />
+        <Route
+          path="/checkout/:trackId"
+          element={
+            <WebsiteLayout>
+              <CheckOut />
             </WebsiteLayout>
           }
         />
