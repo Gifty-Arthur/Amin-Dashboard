@@ -74,3 +74,17 @@ export const enrollLearnerInCourse = async (learnerId, courseId) => {
   );
   return response.data;
 };
+
+/**
+ * Updates the logged-in learner's profile.
+ */
+export const updateProfile = async (profileData) => {
+  const config = getAuthConfig(); // Assumes you have this helper
+  // The API might be /api/learners/me or /api/users/profile
+  const response = await axios.put(
+    "/api/learners/profile",
+    profileData,
+    config
+  );
+  return response.data;
+};

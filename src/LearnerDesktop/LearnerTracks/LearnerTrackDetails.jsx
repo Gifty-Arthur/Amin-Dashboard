@@ -140,25 +140,35 @@ const LearnerTrackDetails = () => {
           </div>
           <h1 className="text-4xl font-bold">{track.name}</h1>
           <p className="mt-2 max-w-3xl">{track.description}</p>
-          <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
-            <span className="font-bold">{averageRating}</span>
-            <div className="flex items-center text-yellow-400">
-              {[...Array(5)].map((_, i) => (
-                <FaStar
-                  key={i}
-                  className={
-                    i < Math.floor(averageRating)
-                      ? "text-yellow-400"
-                      : "text-gray-300"
-                  }
-                />
-              ))}
+          <div className="mt-4 flex flex-wrap items-center gap-10 gap-y-2 text-sm">
+            <div className="mt-2 text-sm flex items-center gap-10">
+              <div className="flex flex-col">
+                <span>Created by </span>
+                <span className="font-semibold">{track.instructor}</span>
+              </div>
+              <div>
+                {" "}
+                <div className="flex flex-col">
+                  <span>Enrolled student</span>
+                  <span className="font-semibold">50</span>
+                </div>
+              </div>
             </div>
-            <span>({track.ratings?.length || 0} ratings)</span>
-            <span>50 Students (Placeholder)</span>
-          </div>
-          <div className="mt-2 text-sm flex items-center gap-x-4">
-            <span>Created by {track.instructor}</span>
+            <div className="flex flex-col ">
+              <span className="font-bold">{averageRating}</span>
+              <div className="flex items-center text-yellow-400   mt-1">
+                {[...Array(5)].map((_, i) => (
+                  <FaStar
+                    key={i}
+                    className={
+                      i < Math.floor(averageRating)
+                        ? "text-yellow-400"
+                        : "text-gray-300"
+                    }
+                  />
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -167,8 +177,53 @@ const LearnerTrackDetails = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
           <div className="lg:col-span-2">
             <div className="border border-gray-200 p-6 rounded-lg">
-              <h3 className="text-2xl font-bold mb-4">What you'll learn</h3>
-              {/* Placeholder Content */}
+              <h3 className="text-2xl font-bold mb-4">What you'll learn</h3> {" "}
+              <ul className="grid grid-cols-1 md:grid-cols gap-4">
+                <li className="flex items-start gap-3">
+                  <IoCheckmarkCircleSharp className="text-green-500 mt-1 flex-shrink-0" />
+
+                  <span>Cloud architecture principles and best practices.</span>
+                </li>
+
+                <li className="flex items-start gap-3">
+                  <IoCheckmarkCircleSharp className="text-green-500 mt-1 flex-shrink-0" />
+
+                  <span>
+                    Deploying and managing applications in AWS, Azure, and GCP.
+                  </span>
+                </li>
+
+                <li className="flex items-start gap-3">
+                  <IoCheckmarkCircleSharp className="text-green-500 mt-1 flex-shrink-0" />
+                  <span>
+                    Infrastructure as Code (Terraform, CloudFormation).
+                  </span>
+                </li>
+
+                <li className="flex items-start gap-3">
+                  <IoCheckmarkCircleSharp className="text-green-500 mt-1 flex-shrink-0" />
+
+                  <span>
+                    computing with AWS Lambda, Azure Functions, and Google Cloud
+                    Functions.
+                  </span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <IoCheckmarkCircleSharp className="text-green-500 mt-1 flex-shrink-0" />
+                  <span>
+                    Containerization and orchestration with Docker and
+                    Kubernetes.
+                  </span>
+                </li>
+
+                <li className="flex items-start gap-3">
+                  <IoCheckmarkCircleSharp className="text-green-500 mt-1 flex-shrink-0" />
+
+                  <span>
+                    CI/CD pipelines and automation for cloud-based applications.
+                  </span>
+                </li>
+              </ul>
             </div>
           </div>
           <div>

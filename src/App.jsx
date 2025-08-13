@@ -30,6 +30,8 @@ import LearnerTracks from "./LearnerDesktop/LearnerTracks/LearnerTracks";
 import Portal from "./LearnerDesktop/LearnerPortal/Portal";
 import LearnerTrackDetails from "./LearnerDesktop/LearnerTracks/LearnerTrackDetails";
 import CheckOut from "./LearnerDesktop/CheckOut/CheckOut";
+import PaymentVerification from "./LearnerDesktop/CheckOut/PaymentVerification";
+import CompleteProfile from "./LearnerDesktop/LeanersAccount/CompleteProfile";
 
 function App() {
   return (
@@ -98,6 +100,23 @@ function App() {
           element={
             <WebsiteLayout>
               <CheckOut />
+            </WebsiteLayout>
+          }
+        />
+        <Route
+          path="/payment-verification/:trackId"
+          element={
+            <WebsiteLayout>
+              <PaymentVerification />
+            </WebsiteLayout>
+          }
+        />
+
+        <Route
+          path="/complete-profile"
+          element={
+            <WebsiteLayout>
+              <CompleteProfile />
             </WebsiteLayout>
           }
         />
