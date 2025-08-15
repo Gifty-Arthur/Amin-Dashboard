@@ -1,23 +1,44 @@
 import axios from "axios";
 
-const API_BASE_URL = "/api/enrollments";
-
 const getToken = () => localStorage.getItem("learnerToken");
 
 const getAuthConfig = () => {
   const token = getToken();
   if (!token) {
-    throw new Error("Authentication token not found. Please log in.");
+    throw new Error("Authentication token not found.");
   }
   return { headers: { Authorization: `Bearer ${token}` } };
 };
 
 /**
+ * Fetches the enrollments (registrations) for the currently logged-in learner.
+ */
+export const getMyEnrollments = async () => {
+  const config = getAuthConfig();
+  // Note: This uses /api/registrations to GET the list
+  const response = await axios.get("/api/registrations", config);
+  return response.data.registrations || response.data;
+};
+
+/**
  * Creates a new enrollment for the logged-in learner.
- * @param {object} enrollmentData - An object containing the trackId.
  */
 export const createEnrollment = async (enrollmentData) => {
   const config = getAuthConfig();
-  const response = await axios.post(API_BASE_URL, enrollmentData, config);
+  // Note: This uses /api/enrollments to CREATE a new one
+  const response = await axios.post("/api/enrollments", enrollmentData, config);
+  return response.data;
+};
+
+/**
+ * Verifies a Paystack payment with the backend.
+ */
+export const verifyPayment = async (reference) => {
+  const config = getAuthConfig();
+  const response = await axios.post(
+    "/api/enrollments/verify-payment",
+    { reference },
+    config
+  );
   return response.data;
 };

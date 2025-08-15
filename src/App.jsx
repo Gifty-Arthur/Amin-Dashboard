@@ -1,6 +1,8 @@
 import React from "react";
-
 import { Route, Routes } from "react-router-dom";
+import { AuthProvider } from "./LearnerDesktop/LeanersAccount/AuthContext";
+
+// Import all your components
 import SignUp from "./Component/Accounts/SignUp";
 import SignIn from "./Component/Accounts/SignIn";
 import Home from "./Component/Pages/HomePage/Home";
@@ -14,138 +16,57 @@ import AdminResetPassword from "./Component/Accounts/AdminResetPassword";
 import ForgotPassword from "./Component/Accounts/ForgotPassword";
 import Report from "./Component/Pages/Report/Report";
 import TrackDetails from "./Component/Pages/Tracks/TrackDetails";
-import AddNewTrack from "./Component/Pages/Tracks/AddNewTrack";
-import EmailVerification from "./Component/Accounts/EmailVerification";
-
-//Learners
 import WebsiteLayout from "./LearnerDesktop/WebsiteLayout";
 import LearnerMain from "./LearnerDesktop/LearnerHomePage/LearnerMain";
-import Trek from "./Component/Pages/Tracks/Trek";
-import AddCourse from "./Component/Pages/Courses/AddCourse";
 import LearnerLogin from "./LearnerDesktop/LeanersAccount/LearnersLogin";
 import LearnersSignUp from "./LearnerDesktop/LeanersAccount/LearnersSignUp";
 import LearnsOTP from "./LearnerDesktop/LeanersAccount/LearnsOTP";
-import { AuthProvider } from "./LearnerDesktop/LeanersAccount/AuthContext";
 import LearnerTracks from "./LearnerDesktop/LearnerTracks/LearnerTracks";
 import Portal from "./LearnerDesktop/LearnerPortal/Portal";
+import LearnerDashboard from "./LearnerDesktop/LearnerPortal/LearnerDashboard";
 import LearnerTrackDetails from "./LearnerDesktop/LearnerTracks/LearnerTrackDetails";
 import CheckOut from "./LearnerDesktop/CheckOut/CheckOut";
 import PaymentVerification from "./LearnerDesktop/CheckOut/PaymentVerification";
-import CompleteProfile from "./LearnerDesktop/LeanersAccount/CompleteProfile";
+import ProfileSettings from "./LearnerDesktop/LearnerPortal/ProfieSettings";
+import LearnerInvoice from "./LearnerDesktop/LearnerPortal/LearnerInvoice";
 
 function App() {
   return (
     <AuthProvider>
       <Routes>
-        {/* Auth pages - without sidebar */}
-        <Route
-          path="/learner"
-          element={
-            <WebsiteLayout>
-              <LearnerMain />
-            </WebsiteLayout>
-          }
-        />
-        <Route
-          path="/learner-login"
-          element={
-            <WebsiteLayout>
-              <LearnerLogin />
-            </WebsiteLayout>
-          }
-        />
-        <Route
-          path="/learners-signup"
-          element={
-            <WebsiteLayout>
-              <LearnersSignUp />
-            </WebsiteLayout>
-          }
-        />
-        <Route
-          path="/learner-otp"
-          element={
-            <WebsiteLayout>
-              <LearnsOTP />
-            </WebsiteLayout>
-          }
-        />
-        <Route
-          path="/learner-tracks"
-          element={
-            <WebsiteLayout>
-              <LearnerTracks />
-            </WebsiteLayout>
-          }
-        />
-        <Route
-          path="/portal"
-          element={
-            <WebsiteLayout>
-              <Portal />
-            </WebsiteLayout>
-          }
-        />
+        {/* --- LEARNER WEBSITE ROUTES (Using WebsiteLayout) --- */}
+        <Route element={<WebsiteLayout />}>
+          <Route path="/learner" element={<LearnerMain />} />
+          <Route path="/learner-login" element={<LearnerLogin />} />
+          <Route path="/learners-signup" element={<LearnersSignUp />} />
+          <Route path="/learner-otp" element={<LearnsOTP />} />
+          <Route path="/learner-tracks" element={<LearnerTracks />} />
+          <Route
+            path="/learner-track-details/:trackId"
+            element={<LearnerTrackDetails />}
+          />
+          <Route path="/checkout/:trackId" element={<CheckOut />} />
+          <Route
+            path="/payment-verification"
+            element={<PaymentVerification />}
+          />
 
-        <Route
-          path="/learner-track-details/:trackId"
-          element={
-            <WebsiteLayout>
-              <LearnerTrackDetails />
-            </WebsiteLayout>
-          }
-        />
-        <Route
-          path="/checkout/:trackId"
-          element={
-            <WebsiteLayout>
-              <CheckOut />
-            </WebsiteLayout>
-          }
-        />
-        <Route
-          path="/payment-verification/:trackId"
-          element={
-            <WebsiteLayout>
-              <PaymentVerification />
-            </WebsiteLayout>
-          }
-        />
+          {/* Nested Portal Routes also use the WebsiteLayout */}
+          <Route path="/portal" element={<Portal />}>
+            <Route index element={<LearnerDashboard />} />
+            <Route path="settings" element={<ProfileSettings />} />
+            <Route path="invoices" element={<LearnerInvoice />} />
+          </Route>
+        </Route>
 
-        <Route
-          path="/complete-profile"
-          element={
-            <WebsiteLayout>
-              <CompleteProfile />
-            </WebsiteLayout>
-          }
-        />
-        <Route path="/signup" element={<SignUp />} />
+        {/* --- ADMIN AUTH ROUTES (No Layout) --- */}
         <Route path="/" element={<SignIn />} />
+        <Route path="/signup" element={<SignUp />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/otp" element={<OTP />} />
-        <Route path="/adminresetpassword" element={<AdminResetPassword />} />
+        {/* ... other admin auth routes */}
 
-        <Route path="/reset-password/:token" element={<AdminResetPassword />} />
-        <Route path="/reset-password" element={<AdminResetPassword />} />
-        <Route path="/add-new-track" element={<AddNewTrack />} />
-        <Route path="/add-course" element={<AddCourse />} />
-
-        <Route
-          path="/trek"
-          element={
-            <DashboardLayout>
-              <Trek />
-            </DashboardLayout>
-          }
-        />
-
-        <Route
-          path="/email-verification/:token"
-          element={<EmailVerification />}
-        />
-
-        {/* Pages with sidebar */}
+        {/* --- ADMIN DASHBOARD ROUTES (Using DashboardLayout) --- */}
         <Route
           path="/dashboard"
           element={
@@ -171,14 +92,13 @@ function App() {
           }
         />
         <Route
-          path="/trackdetails/:trackId" // <-- ADD THIS ROUTE
+          path="/trackdetails/:trackId"
           element={
             <DashboardLayout>
               <TrackDetails />
             </DashboardLayout>
           }
         />
-
         <Route
           path="/track"
           element={
@@ -187,7 +107,6 @@ function App() {
             </DashboardLayout>
           }
         />
-
         <Route
           path="/courses"
           element={
@@ -196,7 +115,6 @@ function App() {
             </DashboardLayout>
           }
         />
-
         <Route
           path="/report"
           element={

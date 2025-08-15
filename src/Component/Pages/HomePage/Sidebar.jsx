@@ -52,7 +52,7 @@ const Sidebar = () => {
         </div>
         <ul className="space-y-6 mt-6">
           <NavLink
-            to="/"
+            to="/dashboard"
             className={({ isActive }) =>
               `flex items-center space-x-2 p-2 rounded-md hover:bg-white hover:text-blue-900 ${
                 isActive ? "bg-white text-blue-900" : ""
