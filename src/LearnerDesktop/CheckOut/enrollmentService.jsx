@@ -42,3 +42,20 @@ export const verifyPayment = async (reference) => {
   );
   return response.data;
 };
+
+export const getEnrollmentsByLearnerId = async (learnerId) => {
+  // Note: This uses the ADMIN token
+  const adminToken = localStorage.getItem("token");
+  if (!adminToken) {
+    throw new Error("Admin token not found.");
+  }
+  const config = {
+    headers: { Authorization: `Bearer ${adminToken}` },
+  };
+
+  const response = await axios.get(
+    `/api/enrollments/learner/${learnerId}`,
+    config
+  );
+  return response.data.enrollments || response.data;
+};

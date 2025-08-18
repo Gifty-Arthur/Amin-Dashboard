@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../LeanersAccount/AuthContext";
 import { updateProfile } from "./ProfileService";
+import { FaVenusMars } from "react-icons/fa"; // 1. IMPORT an icon
 
 const ProfileSettings = () => {
   const { user, login } = useAuth();
@@ -13,6 +14,8 @@ const ProfileSettings = () => {
     contact: "",
     location: "",
     description: "",
+    gender: "", // 2. ADD 'gender' to state
+
     disabled: false, // 1. ADD 'disabled' to state
     currentPassword: "",
     newPassword: "",
@@ -33,6 +36,8 @@ const ProfileSettings = () => {
         location: user.location || "",
         description: user.description || "",
         disabled: user.disabled || false,
+        gender: user.gender || "",
+
         currentPassword: "",
         newPassword: "",
         confirmNewPassword: "",
@@ -87,6 +92,8 @@ const ProfileSettings = () => {
       submissionData.append("contact", formData.contact);
       submissionData.append("location", formData.location);
       submissionData.append("description", formData.description);
+      submissionData.append("gender", formData.gender); // 3. SEND 'gender' field
+
       submissionData.append("disabled", formData.disabled); // 3. SEND 'disabled' field
 
       if (imageFile) {
@@ -201,6 +208,24 @@ const ProfileSettings = () => {
               onChange={handleChange}
               className="w-full mt-1 p-2 border rounded"
             />
+          </div>
+          <div>
+            <label className="block font-medium">Gender</label>
+            <div className="relative">
+              <FaVenusMars className="absolute top-1/2 left-3 -translate-y-1/2 text-gray-400" />
+              <select
+                name="gender"
+                value={formData.gender}
+                onChange={handleChange}
+                className="w-full mt-1 p-2 border rounded pl-10 appearance-none bg-white"
+              >
+                <option value="" disabled>
+                  Select Gender
+                </option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+              </select>
+            </div>
           </div>
         </div>
 

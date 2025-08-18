@@ -21,8 +21,9 @@ const API_UPDATE_URL = "/api/auth/update";
  * Updates the logged-in user's profile.
  * @param {FormData} profileData - The user's updated data, including image.
  */
+// src/services/profileService.js
 export const updateProfile = async (profileData) => {
   const config = getAuthConfig();
-  const response = await axios.put(API_UPDATE_URL, profileData, config);
-  return response.data;
+  const response = await axios.put("/api/auth/update", profileData, config);
+  return response.data; // This should return { success: true, user: {...} }
 };

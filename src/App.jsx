@@ -45,6 +45,7 @@ function App() {
             path="/learner-track-details/:trackId"
             element={<LearnerTrackDetails />}
           />
+
           <Route path="/checkout/:trackId" element={<CheckOut />} />
           <Route
             path="/payment-verification"
