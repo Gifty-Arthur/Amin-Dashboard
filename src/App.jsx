@@ -4,9 +4,7 @@ import { AdminRoutes } from "./Component/AdminRoutes";
 import { LearnerRoutes } from "./Component/LearnerRoutes";
 
 const App = () => {
-  // This checks if your Netlify URL starts with your admin site's name
-  // e.g., "g-client-admin.netlify.app"
-  const isAdmin = window.location.hostname.startsWith("g-client-admin"); // Use your admin site's name
+  const isAdmin = window.location.hostname.startsWith("g-client-admin");
 
   return (
     <AuthProvider>{isAdmin ? <AdminRoutes /> : <LearnerRoutes />}</AuthProvider>
