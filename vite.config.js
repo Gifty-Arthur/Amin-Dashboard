@@ -13,7 +13,7 @@ export default defineConfig({
       '/api': {
         target: 'https://tmp-se-projectapi.azurewebsites.net/',
         changeOrigin: true,
-        secure: true,
+        secure: false,
       }
     }
   }
