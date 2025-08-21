@@ -73,7 +73,7 @@ const OTP = () => {
         setIsSuccess(true);
         localStorage.removeItem("verificationEmail");
         setTimeout(() => {
-          navigate("/login");
+          navigate("/");
         }, 2000);
       } else {
         setErrors({ otp: data.message || "Failed to verify OTP." });
@@ -198,10 +198,7 @@ const OTP = () => {
 
           <p className="mt-4 text-center text-gray-600 text-sm">
             Back to{" "}
-            <Link
-              to="/login"
-              className="text-primary hover:underline font-medium"
-            >
+            <Link to="/" className="text-primary hover:underline font-medium">
               Login
             </Link>
           </p>
