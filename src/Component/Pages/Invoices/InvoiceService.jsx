@@ -33,7 +33,6 @@ export const getInvoiceById = async (invoiceId) => {
 };
 
 /**
- * Creates a new invoice.
  */
 export const createInvoice = async (invoiceData) => {
   const config = getAuthConfig();
