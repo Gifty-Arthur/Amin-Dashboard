@@ -10,7 +10,7 @@ import { IoClose } from "react-icons/io5";
 
 import Title from "../../Titles/titles";
 import Subt from "../../Titles/subt";
-import SearchBar from "../../../Component/Buttons/SearchBar/SearchBar";
+import SearchBar from "../../Buttons/Searchbar";
 import { getAllLearners } from "./LearnersService";
 import { getAllInvoices } from "../Invoices/InvoiceService";
 import { getEnrollmentsByLearnerId } from "../../../LearnerDesktop/CheckOut/enrollmentService";
