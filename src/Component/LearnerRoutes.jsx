@@ -20,9 +20,9 @@ export const LearnerRoutes = () => (
   <Routes>
     {/* All routes inside here will share the same main layout (Navbar, Footer) */}
     <Route element={<WebsiteLayout />}>
-      <Route path="/" element={<LearnerMain />} />
+      <Route path="/learner" element={<LearnerMain />} />
       <Route path="/learner-login" element={<LearnersLogin />} />
-      <Route path="/learner-signup" element={<LearnersSignUp />} />
+      <Route path="/learners-signup" element={<LearnersSignUp />} />
       <Route path="/learner-otp" element={<LearnsOTP />} />
       <Route path="/learner-tracks" element={<LearnerTracks />} />
       <Route

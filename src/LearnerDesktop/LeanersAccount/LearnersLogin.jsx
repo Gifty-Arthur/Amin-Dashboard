@@ -108,7 +108,7 @@ const LearnersLogin = () => {
           <p className="text-center mt-4 text-sm">
             Need to create an Account?{" "}
             <Link
-              to="/learner-signup"
+              to="/learners-signup"
               className="text-primary font-semibold hover:underline"
             >
               Sign Up
