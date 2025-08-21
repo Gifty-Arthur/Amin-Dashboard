@@ -16,103 +16,30 @@ const SignUp = () => {
   });
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
-  const [successMessage, setSuccessMessage] = useState(""); // State for success message
+  const [successMessage, setSuccessMessage] = useState("");
 
-  // Handle input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
     if (errors[name]) {
-      setErrors((prev) => ({
-        ...prev,
-        [name]: "",
-      }));
+      setErrors((prev) => ({ ...prev, [name]: "" }));
     }
     setSuccessMessage("");
   };
 
-  // Validate form data
-  const validateForm = () => {
-    const newErrors = {};
-
-    if (!formData.firstName.trim()) {
-      newErrors.firstName = "First name is required";
-    }
-
-    if (!formData.lastName.trim()) {
-      newErrors.lastName = "Last name is required";
-    }
-
-    if (!formData.email.trim()) {
-      newErrors.email = "Email is required";
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = "Email is invalid";
-    }
-
-    if (!formData.contact.trim()) {
-      newErrors.contact = "Contact number is required";
-    } else if (!/^\+?[\d\s-()]+$/.test(formData.contact)) {
-      newErrors.contact = "Please enter a valid contact number";
-    }
-
-    if (!formData.password) {
-      newErrors.password = "Password is required";
-    } else if (formData.password.length < 8) {
-      newErrors.password = "Password must be at least 8 characters";
-    } else if (
-      !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/.test(
-        formData.password
-      )
-    ) {
-      newErrors.password =
-        "Password must contain at least one uppercase letter, one lowercase letter, one number and one special character";
-    }
-
-    if (!formData.confirmPassword) {
-      newErrors.confirmPassword = "Please confirm your password";
-    } else if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = "Passwords do not match";
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  // Handle form submission
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Prevent default form submission
-
-    if (!validateForm()) {
-      return;
-    }
-
+    e.preventDefault();
     setIsLoading(true);
-    setErrors({}); // Clear previous errors
-    setSuccessMessage(""); // Clear previous success messages
+    setErrors({});
+    setSuccessMessage("");
 
     try {
-      console.log("Sending signup request with data:", {
-        firstName: formData.firstName,
-        lastName: formData.lastName,
-        email: formData.email,
-        password: formData.password,
-        // Note: contact and confirmPassword are sent, but password and confirmPassword
-        // are typically handled by backend validation for security.
-      });
-
-      // Using Vite proxy - requests to /api/* will be forwarded to the Azure API
-      const apiUrl = "/api/auth/signup/admin"; // This is the correct endpoint
+      // ✅ This is the correct API endpoint you provided
+      const apiUrl = "/api/auth/signup/admin";
 
       const response = await fetch(apiUrl, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        mode: "cors", // Ensure CORS is handled correctly by your proxy/backend
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           firstName: formData.firstName,
           lastName: formData.lastName,
@@ -123,88 +50,23 @@ const SignUp = () => {
         }),
       });
 
-      console.log("Response status:", response.status);
-      console.log("Response headers:", response.headers);
-
-      let data;
-      const contentType = response.headers.get("content-type");
-
-      if (contentType && contentType.includes("application/json")) {
-        data = await response.json();
-        console.log("Response data:", data);
-      } else {
-        const textResponse = await response.text();
-        console.log("Non-JSON response:", textResponse);
-        data = { message: textResponse };
-      }
+      const data = await response.json();
 
       if (response.ok) {
-        // Success - inform user to check email
-        console.log("Sign up successful:", data);
         setSuccessMessage(
-          "Account created successfully! Please check your email to verify your account before logging in."
+          "Account created! Please check your email to verify."
         );
-        // Store email for OTP verification in localStorage
-        // Using 'verificationEmail' to distinguish from 'resetEmail' used in OTP component
-        localStorage.setItem("verificationEmail", formData.email);
-
-        // Optionally, reset form fields after successful signup
-        setFormData({
-          firstName: "",
-          lastName: "",
-          email: "",
-          contact: "",
-          password: "",
-          confirmPassword: "",
-        });
-
-        // Redirect to OTP page after a short delay to allow user to read message
         setTimeout(() => {
-          navigate("/otp");
-        }, 3000); // Redirect after 3 seconds
+          navigate("/"); // Navigate to the admin login page
+        }, 3000);
       } else {
-        // Handle API errors - show detailed error for debugging
-        console.error("API Error:", data);
-        console.error("Full error details:", JSON.stringify(data, null, 2));
-
-        let errorMessage = "Sign up failed. ";
-
-        if (data.message) {
-          errorMessage += data.message;
-        } else if (data.error) {
-          errorMessage += data.error;
-        } else if (data.errors && Array.isArray(data.errors)) {
-          console.log("Validation errors:", data.errors);
-          errorMessage += "Validation errors: " + data.errors.join(", ");
-        } else if (data.errors && typeof data.errors === "object") {
-          console.log("Validation errors object:", data.errors);
-          errorMessage +=
-            "Validation errors: " + Object.values(data.errors).join(", ");
-        } else {
-          errorMessage += `Status: ${response.status}`;
-        }
-
-        setErrors({
-          submit: errorMessage,
-        });
+        const errorMessage =
+          data.message || data.errors?.[0]?.message || "Sign up failed.";
+        setErrors({ submit: errorMessage });
       }
     } catch (error) {
-      console.error("Sign up error details:", error);
-
-      if (error.name === "TypeError" && error.message.includes("fetch")) {
-        setErrors({
-          submit:
-            "Unable to connect to the server. Please check if the API is running and try again.",
-        });
-      } else if (error.name === "AbortError") {
-        setErrors({
-          submit: "Request timed out. Please try again.",
-        });
-      } else {
-        setErrors({
-          submit: `Network error: ${error.message}. Please check your connection and try again.`,
-        });
-      }
+      setErrors({ submit: "An unexpected error occurred." });
+      console.error("Sign up error:", error);
     } finally {
       setIsLoading(false);
     }
