@@ -7,7 +7,7 @@ import { IoPersonOutline } from "react-icons/io5";
 import { FaPlus } from "react-icons/fa";
 
 import { getAllTracks } from "./TrackService";
-import SearchBar from "../../Buttons/Searchbar";
+import SearchBar from "../../SearchBar";
 import AddTask from "../../Buttons/AddTask";
 import AddNewTrack from "./AddNewTrack";
 

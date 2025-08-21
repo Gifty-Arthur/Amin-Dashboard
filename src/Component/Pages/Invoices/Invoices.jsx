@@ -7,7 +7,7 @@ import { IoClose } from "react-icons/io5";
 import Title from "../../Titles/titles";
 import Subt from "../../Titles/subt";
 import AddTask from "../../Buttons/AddTask";
-import SearchBar from "../../Buttons/Searchbar";
+import SearchBar from "../../SearchBar";
 import { getAllInvoices, updateInvoice, deleteInvoice } from "./InvoiceService";
 import { getAllLearners } from "../Learners/LearnersService";
 import AddNewInvoice from "./AddNewInvoice";

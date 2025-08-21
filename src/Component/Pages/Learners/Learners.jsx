@@ -10,7 +10,7 @@ import { IoClose } from "react-icons/io5";
 
 import Title from "../../Titles/titles";
 import Subt from "../../Titles/subt";
-import SearchBar from "../../Buttons/Searchbar"; // Use the correct, single import
+import SearchBar from "../../../Component/SearchBar";
 import { getAllLearners } from "./LearnersService";
 import { getAllInvoices } from "../Invoices/InvoiceService";
 import { getEnrollmentsByLearnerId } from "../../../LearnerDesktop/CheckOut/enrollmentService";
