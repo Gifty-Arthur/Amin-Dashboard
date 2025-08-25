@@ -1,4 +1,5 @@
 G-Client LMS - Admin Dashboard & Learner Website
+
 This repository contains the complete frontend codebase for the G-Client Learning Management System (LMS). It includes two distinct applications deployed from this single repository: a comprehensive Admin Dashboard for managing the platform and a modern, user-facing website for learners.
 
 Live Demos
