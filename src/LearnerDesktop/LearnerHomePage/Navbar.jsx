@@ -20,7 +20,7 @@ const Navbar = () => {
       <div className="flex items-center gap-10">
         <img src={logo} alt="Logo" className="w-16 h-16 object-contain" />
         <ul className="flex gap-4">
-          <Link to="/learner" className="font-semibold hover:text-primary">
+          <Link to="/" className="font-semibold hover:text-primary">
             Home
           </Link>
           <Link
