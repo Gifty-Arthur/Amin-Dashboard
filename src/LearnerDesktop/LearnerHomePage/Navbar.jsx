@@ -3,11 +3,18 @@ import { Link, useNavigate } from "react-router-dom";
 import logo from "../../assets/Images/Account/logo.png";
 import { FaChevronDown } from "react-icons/fa";
 import { useAuth } from "../LeanersAccount/AuthContext";
+import { useEffect } from "react";
 
 const Navbar = () => {
   const navigate = useNavigate();
   const { user, logout } = useAuth(); // 2. GET user and logout from context
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  useEffect(() => {
+    // This will run whenever the user logs in or out,
+    // ensuring the dropdown is closed by default.
+    setIsDropdownOpen(false);
+  }, [user]);
 
   const handleLogout = () => {
     logout();
@@ -46,16 +53,17 @@ const Navbar = () => {
               <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
                 <Link
                   to="/portal"
+                  onClick={() => setIsDropdownOpen(false)}
                   className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 border-b hover:text-primary"
                 >
                   Portal
                 </Link>
-                <Link
-                  to="/learner-login"
+                <button
+                  onClick={handleLogout}
                   className="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                 >
                   Logout
-                </Link>
+                </button>
               </div>
             )}
           </div>

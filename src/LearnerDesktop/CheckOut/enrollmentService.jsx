@@ -15,9 +15,10 @@ const getAuthConfig = () => {
  */
 export const getMyEnrollments = async () => {
   const config = getAuthConfig();
-  // Note: This uses /api/registrations to GET the list
-  const response = await axios.get("/api/registrations", config);
-  return response.data.registrations || response.data;
+  // ✅ CORRECTED: Use the /api/enrollments endpoint
+  const response = await axios.get("/api/enrollments", config);
+  // ✅ CORRECTED: Look for the 'enrollments' key in the response
+  return response.data.enrollments || response.data;
 };
 
 /**

@@ -1,15 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { useLocation, Link, useNavigate } from "react-router-dom"; // 1. IMPORT useNavigate
+import { useLocation, Link, useNavigate } from "react-router-dom";
 import { verifyPayment } from "./enrollmentService";
 import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
 
 const PaymentVerification = () => {
   const [status, setStatus] = useState("Verifying your payment...");
   const [message, setMessage] = useState("");
+  const [isVerified, setIsVerified] = useState(false); // 1. ADD a state to track verification
   const location = useLocation();
-  const navigate = useNavigate(); // 2. INITIALIZE useNavigate
+  const navigate = useNavigate();
 
   useEffect(() => {
+    // 2. PREVENT the effect from running again if already verified
+    if (isVerified) return;
+
     const queryParams = new URLSearchParams(location.search);
     const reference = queryParams.get("reference");
 
@@ -19,12 +23,11 @@ const PaymentVerification = () => {
           const response = await verifyPayment(reference);
           if (response.success) {
             setStatus("You have successfully enrolled!");
-            setMessage("You will be redirected to the homepage shortly.");
+            setMessage("You will be redirected to your portal shortly.");
 
-            // 3. ADD AUTOMATIC REDIRECT
             setTimeout(() => {
-              navigate("/learner"); // Redirect to the learner homepage
-            }, 3000); // Wait 3 seconds
+              navigate("/portal"); // Navigate to the portal
+            }, 5000);
           } else {
             throw new Error(response.message || "Verification failed.");
           }
@@ -34,14 +37,18 @@ const PaymentVerification = () => {
             err.message || "There was an issue confirming your payment."
           );
           console.error(err);
+        } finally {
+          // 3. MARK verification as complete
+          setIsVerified(true);
         }
       };
       verify();
     } else {
       setStatus("Payment Verification Failed");
       setMessage("No payment reference was found.");
+      setIsVerified(true);
     }
-  }, [location, navigate]);
+  }, [location, navigate, isVerified]); // 4. ADD isVerified to dependency array
 
   return (
     <div className="text-center p-10 md:p-20 flex flex-col items-center">
@@ -51,11 +58,8 @@ const PaymentVerification = () => {
       {status.includes("Failed") && (
         <FaTimesCircle className="text-red-500 text-6xl mb-4" />
       )}
-
       <h1 className="text-3xl font-bold mb-4">{status}</h1>
-
       <p className="text-gray-600 mb-8">{message}</p>
-
       <Link
         to="/learner"
         className="px-6 py-3 bg-primary text-white font-semibold rounded-lg"
