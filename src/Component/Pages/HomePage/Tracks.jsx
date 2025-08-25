@@ -71,11 +71,6 @@ const Treck = () => {
                       <h2 className="text-xl font-bold text-gray-900 mb-2">
                         {track.name}
                       </h2>
-                      <p className="text-gray-600 text-sm mb-4 leading-relaxed flex-grow">
-                        {" "}
-                        {/* flex-grow makes description expand */}
-                        {track.description}
-                      </p>
                       {/* This div is pushed to the bottom */}
                       <div className="mt-auto flex flex-col text-sm gap-2 pt-2 border-t border-gray-100">
                         <div className="flex items-center">

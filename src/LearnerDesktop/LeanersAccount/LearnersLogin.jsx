@@ -31,7 +31,7 @@ const LearnersLogin = () => {
       const data = await response.json();
       if (response.ok) {
         login(data.user, data.token);
-        navigate("/learner");
+        navigate("/");
       } else {
         setError(data.message || "Login failed.");
       }
