@@ -57,7 +57,7 @@ const SignUp = () => {
           "Account created! Please check your email to verify."
         );
         setTimeout(() => {
-          navigate("/"); // Navigate to the admin login page
+          navigate("/otp"); // Navigate to the admin login page
         }, 3000);
       } else {
         const errorMessage =
