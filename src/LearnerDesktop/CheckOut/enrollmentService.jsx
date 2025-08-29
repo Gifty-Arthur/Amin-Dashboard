@@ -11,13 +11,11 @@ const getAuthConfig = () => {
 };
 
 /**
- * Fetches the enrollments (registrations) for the currently logged-in learner.
+ * Fetches the enrollments for the currently logged-in learner.
  */
 export const getMyEnrollments = async () => {
   const config = getAuthConfig();
-  // ✅ CORRECTED: Use the /api/enrollments endpoint
   const response = await axios.get("/api/enrollments", config);
-  // ✅ CORRECTED: Look for the 'enrollments' key in the response
   return response.data.enrollments || response.data;
 };
 
@@ -26,7 +24,6 @@ export const getMyEnrollments = async () => {
  */
 export const createEnrollment = async (enrollmentData) => {
   const config = getAuthConfig();
-  // Note: This uses /api/enrollments to CREATE a new one
   const response = await axios.post("/api/enrollments", enrollmentData, config);
   return response.data;
 };
@@ -44,19 +41,28 @@ export const verifyPayment = async (reference) => {
   return response.data;
 };
 
+/**
+ * Fetches all enrollments for a specific learner by their ID (for Admin use).
+ */
 export const getEnrollmentsByLearnerId = async (learnerId) => {
-  // Note: This uses the ADMIN token
   const adminToken = localStorage.getItem("token");
   if (!adminToken) {
     throw new Error("Admin token not found.");
   }
-  const config = {
-    headers: { Authorization: `Bearer ${adminToken}` },
-  };
-
+  const config = { headers: { Authorization: `Bearer ${adminToken}` } };
   const response = await axios.get(
     `/api/enrollments/learner/${learnerId}`,
     config
   );
   return response.data.enrollments || response.data;
+};
+
+/**
+ * ✅ ADDED THIS FUNCTION
+ * Updates the logged-in learner's profile.
+ */
+export const updateProfile = async (profileData) => {
+  const config = getAuthConfig(); // Uses the learner's token
+  const response = await axios.put("/api/auth/update", profileData, config);
+  return response.data;
 };

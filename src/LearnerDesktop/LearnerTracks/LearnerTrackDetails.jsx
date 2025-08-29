@@ -17,7 +17,7 @@ const DetailsCard = ({ track }) => {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-lg overflow-hidden sticky top-8">
+    <div className="bg-white rounded-lg shadow-lg overflow-hidden sticky top-8 -mt-50">
       <img
         src={track.image}
         alt={track.name}

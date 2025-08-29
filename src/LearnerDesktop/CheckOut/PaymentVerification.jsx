@@ -61,7 +61,7 @@ const PaymentVerification = () => {
       <h1 className="text-3xl font-bold mb-4">{status}</h1>
       <p className="text-gray-600 mb-8">{message}</p>
       <Link
-        to="/learner"
+        to="/"
         className="px-6 py-3 bg-primary text-white font-semibold rounded-lg"
       >
         Go to Homepage Now

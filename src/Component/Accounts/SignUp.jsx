@@ -27,16 +27,46 @@ const SignUp = () => {
     setSuccessMessage("");
   };
 
+  const validateForm = () => {
+    const newErrors = {};
+    if (!formData.firstName.trim()) {
+      newErrors.firstName = "First name is required";
+    }
+    if (!formData.lastName.trim()) {
+      newErrors.lastName = "Last name is required";
+    }
+    if (!formData.email.trim()) {
+      newErrors.email = "Email is required";
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = "Email is invalid";
+    }
+    if (!formData.contact.trim()) {
+      newErrors.contact = "Contact number is required";
+    }
+    if (!formData.password) {
+      newErrors.password = "Password is required";
+    } else if (formData.password.length < 8) {
+      newErrors.password = "Password must be at least 8 characters";
+    }
+    if (formData.password !== formData.confirmPassword) {
+      newErrors.confirmPassword = "Passwords do not match";
+    }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!validateForm()) {
+      return;
+    }
+
     setIsLoading(true);
     setErrors({});
     setSuccessMessage("");
 
     try {
-      // ✅ This is the correct API endpoint you provided
       const apiUrl = "/api/auth/signup/admin";
-
       const response = await fetch(apiUrl, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -54,10 +84,14 @@ const SignUp = () => {
 
       if (response.ok) {
         setSuccessMessage(
-          "Account created! Please check your email to verify."
+          "Account created successfully! Please check your email to verify."
         );
+
+        // ✅ ADDED THIS LINE TO SAVE THE EMAIL
+        localStorage.setItem("verificationEmail", formData.email);
+
         setTimeout(() => {
-          navigate("/otp"); // Navigate to the admin login page
+          navigate("/otp");
         }, 3000);
       } else {
         const errorMessage =
@@ -93,14 +127,12 @@ const SignUp = () => {
             </p>
           </div>
 
-          {/* Display general error message */}
           {errors.submit && (
             <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
               {errors.submit}
             </div>
           )}
 
-          {/* Display success message */}
           {successMessage && (
             <div className="mb-4 p-3 bg-green-100 border border-green-400 text-green-700 rounded">
               {successMessage}
@@ -108,6 +140,72 @@ const SignUp = () => {
           )}
 
           <form className="space-y-4" onSubmit={handleSubmit}>
+            <div>
+              <label
+                htmlFor="firstName"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
+                First Name
+              </label>
+              <input
+                id="firstName"
+                type="text"
+                name="firstName"
+                value={formData.firstName}
+                onChange={handleChange}
+                className={`w-full shadow-lg px-4 py-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                  errors.firstName ? "border-red-500" : "border-gray-300"
+                }`}
+                required
+              />
+              {errors.firstName && (
+                <p className="mt-1 text-sm text-red-600">{errors.firstName}</p>
+              )}
+            </div>
+            <div>
+              <label
+                htmlFor="lastName"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
+                Last Name
+              </label>
+              <input
+                id="lastName"
+                type="text"
+                name="lastName"
+                value={formData.lastName}
+                onChange={handleChange}
+                className={`w-full shadow-lg px-4 py-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                  errors.lastName ? "border-red-500" : "border-gray-300"
+                }`}
+                required
+              />
+              {errors.lastName && (
+                <p className="mt-1 text-sm text-red-600">{errors.lastName}</p>
+              )}
+            </div>
+            <div>
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
+                Email
+              </label>
+              <input
+                id="email"
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                className={`w-full shadow-lg px-4 py-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                  errors.email ? "border-red-500" : "border-gray-300"
+                }`}
+                required
+              />
+              {errors.email && (
+                <p className="mt-1 text-sm text-red-600">{errors.email}</p>
+              )}
+            </div>
             <div>
               <label
                 htmlFor="contact"
@@ -131,76 +229,6 @@ const SignUp = () => {
                 <p className="mt-1 text-sm text-red-600">{errors.contact}</p>
               )}
             </div>
-
-            <div>
-              <label
-                htmlFor="firstName"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
-                First Name
-              </label>
-              <input
-                id="firstName"
-                type="text"
-                name="firstName"
-                value={formData.firstName}
-                onChange={handleChange}
-                className={`w-full shadow-lg px-4 py-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                  errors.firstName ? "border-red-500" : "border-gray-300"
-                }`}
-                required
-              />
-              {errors.firstName && (
-                <p className="mt-1 text-sm text-red-600">{errors.firstName}</p>
-              )}
-            </div>
-
-            <div>
-              <label
-                htmlFor="lastName"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
-                Last Name
-              </label>
-              <input
-                id="lastName"
-                type="text"
-                name="lastName"
-                value={formData.lastName}
-                onChange={handleChange}
-                className={`w-full shadow-lg px-4 py-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                  errors.lastName ? "border-red-500" : "border-gray-300"
-                }`}
-                required
-              />
-              {errors.lastName && (
-                <p className="mt-1 text-sm text-red-600">{errors.lastName}</p>
-              )}
-            </div>
-
-            <div>
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
-                Email
-              </label>
-              <input
-                id="email"
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                className={`w-full shadow-lg px-4 py-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                  errors.email ? "border-red-500" : "border-gray-300"
-                }`}
-                required
-              />
-              {errors.email && (
-                <p className="mt-1 text-sm text-red-600">{errors.email}</p>
-              )}
-            </div>
-
             <div>
               <label
                 htmlFor="password"
@@ -223,12 +251,7 @@ const SignUp = () => {
               {errors.password && (
                 <p className="mt-1 text-sm text-red-600">{errors.password}</p>
               )}
-              <p className="mt-1 text-xs text-gray-500">
-                Password must contain: uppercase letter, lowercase letter,
-                number, and special character (@$!%*?&)
-              </p>
             </div>
-
             <div>
               <label
                 htmlFor="confirmPassword"
@@ -253,21 +276,15 @@ const SignUp = () => {
                 </p>
               )}
             </div>
-
-            <AccountButtons
-              type="submit" // Correctly set to submit
-              disabled={isLoading}
-              // Removed redundant onClick={handleSubmit} as type="submit" on button inside form handles it
-            >
+            <AccountButtons type="submit" disabled={isLoading}>
               {isLoading ? "Signing up..." : "Sign up"}
             </AccountButtons>
           </form>
-
           <p className="mt-6 text-center text-gray-600 text-sm">
             Already have an account?{" "}
             <Link to="/" className="text-primary hover:underline">
               Login
-            </Link>{" "}
+            </Link>
           </p>
         </div>
       </div>

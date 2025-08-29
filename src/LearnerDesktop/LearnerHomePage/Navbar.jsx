@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import logo from "../../assets/Images/Account/logo.png";
 import { FaChevronDown } from "react-icons/fa";
 import { useAuth } from "../LeanersAccount/AuthContext";
@@ -20,22 +20,31 @@ const Navbar = () => {
     logout();
     navigate("/learner-login");
   };
-
+  const activeLinkStyle = "text-primary font-bold";
+  const inactiveLinkStyle = "font-semibold hover:text-primary";
   return (
     <div className="flex items-center justify-between bg-white shadow-md p-4 px-8 md:px-20">
       {/* Logo and navigation links */}
       <div className="flex items-center gap-10">
         <img src={logo} alt="Logo" className="w-16 h-16 object-contain" />
         <ul className="flex gap-4">
-          <Link to="/" className="font-semibold hover:text-primary">
+          <NavLink
+            to="/"
+            end // 'end' prop ensures it's only active for the exact path
+            className={({ isActive }) =>
+              isActive ? activeLinkStyle : inactiveLinkStyle
+            }
+          >
             Home
-          </Link>
-          <Link
+          </NavLink>
+          <NavLink
             to="/learner-tracks"
-            className="font-semibold hover:text-primary"
+            className={({ isActive }) =>
+              isActive ? activeLinkStyle : inactiveLinkStyle
+            }
           >
             Tracks
-          </Link>
+          </NavLink>
         </ul>
       </div>
 
@@ -51,13 +60,13 @@ const Navbar = () => {
             </button>
             {isDropdownOpen && (
               <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
-                <Link
+                <NavLink
                   to="/portal"
                   onClick={() => setIsDropdownOpen(false)}
-                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 border-b hover:text-primary"
+                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                 >
                   Portal
-                </Link>
+                </NavLink>
                 <button
                   onClick={handleLogout}
                   className="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"

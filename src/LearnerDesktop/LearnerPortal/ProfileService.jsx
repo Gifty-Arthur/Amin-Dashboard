@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const getToken = () => localStorage.getItem("learnerToken"); // Or "token" depending on what you use
+const getToken = () => localStorage.getItem("learnerToken");
 
 const getAuthConfig = () => {
   const token = getToken();
@@ -10,20 +10,17 @@ const getAuthConfig = () => {
   return {
     headers: {
       Authorization: `Bearer ${token}`,
-      // Content-Type will be set automatically by the browser for FormData
+      // Content-Type is set automatically for FormData
     },
   };
 };
 
-const API_UPDATE_URL = "/api/auth/update";
-
 /**
- * Updates the logged-in user's profile.
- * @param {FormData} profileData - The user's updated data, including image.
+ * Updates the logged-in learner's profile using FormData.
  */
-// src/services/profileService.js
 export const updateProfile = async (profileData) => {
   const config = getAuthConfig();
+  // Use the specific endpoint for updating user/auth details
   const response = await axios.put("/api/auth/update", profileData, config);
-  return response.data; // This should return { success: true, user: {...} }
+  return response.data;
 };

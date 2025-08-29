@@ -181,7 +181,7 @@ const ForgotPassword = () => {
 
           {isSuccess && (
             <div className="mt-4 text-center">
-              <Link to="/login" className="text-primary hover:underline">
+              <Link to="/" className="text-primary hover:underline">
                 Back to Login
               </Link>
             </div>
@@ -189,7 +189,7 @@ const ForgotPassword = () => {
 
           <p className="mt-6 text-center text-gray-600 text-sm">
             Back to{" "}
-            <Link to="/login" className="text-primary hover:underline">
+            <Link to="/" className="text-primary hover:underline">
               Login
             </Link>
           </p>

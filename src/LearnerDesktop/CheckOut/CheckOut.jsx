@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useAuth } from "../../LearnerDesktop/LeanersAccount/AuthContext";
 import { getTrackById } from "../../Component/Pages/Tracks/TrackService";
 import { createEnrollment } from "./enrollmentService";
+import { updateProfile } from "./enrollmentService";
 import {
   FaUser,
   FaEnvelope,
@@ -16,7 +17,7 @@ import {
 const CheckOut = () => {
   const { trackId } = useParams();
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, login } = useAuth();
 
   const [track, setTrack] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -38,9 +39,8 @@ const CheckOut = () => {
   useEffect(() => {
     const fetchTrackDetails = async () => {
       if (!trackId) {
-        setError("No track specified.");
         setLoading(false);
-        return;
+        return setError("No track specified.");
       }
       try {
         const trackData = await getTrackById(trackId);
@@ -80,34 +80,41 @@ const CheckOut = () => {
     }
     setIsSubmitting(true);
     setError("");
+
     try {
-      const payload = {
+      // --- Step 1: Update the user's profile first using FormData ---
+      const profileUpdateData = new FormData();
+      profileUpdateData.append("contact", formData.contact);
+      profileUpdateData.append("gender", formData.gender);
+      profileUpdateData.append("location", formData.location);
+      profileUpdateData.append("description", formData.description);
+      profileUpdateData.append("disabled", false); // Add the required 'disabled' field
+
+      const updatedUserData = await updateProfile(profileUpdateData);
+      login(updatedUserData.user, localStorage.getItem("learnerToken")); // Update global user state
+
+      // --- Step 2: Proceed with the enrollment ---
+      const enrollmentPayload = {
         track: trackId,
         learner: user._id,
         paystackCallbackUrl: `${window.location.origin}/payment-verification`,
       };
+      const enrollmentResponse = await createEnrollment(enrollmentPayload);
 
-      const responseData = await createEnrollment(payload);
-
-      if (responseData.authorization_url || responseData.transactionUrl) {
+      if (
+        enrollmentResponse.authorization_url ||
+        enrollmentResponse.transactionUrl
+      ) {
         window.location.href =
-          responseData.authorization_url || responseData.transactionUrl;
+          enrollmentResponse.authorization_url ||
+          enrollmentResponse.transactionUrl;
       } else {
-        // If no payment URL, assume direct enrollment was successful
         setSuccess(true);
-        setTimeout(() => {
-          navigate("/portal");
-        }, 2000);
+        setTimeout(() => navigate("/portal"), 2000);
       }
     } catch (err) {
-      const errorMessage =
-        err.response?.data?.errors?.[0]?.message || "Enrollment failed.";
-      if (errorMessage.includes("complete your profile")) {
-        navigate("/complete-profile");
-      } else {
-        setError(errorMessage);
-      }
-      console.error("Enrollment error:", err);
+      setError(err.response?.data?.message || "An error occurred.");
+      console.error("Checkout error:", err);
     } finally {
       setIsSubmitting(false);
     }
@@ -132,34 +139,30 @@ const CheckOut = () => {
       <div className="w-full bg-primary h-[135px] flex items-center justify-center">
         <h1 className="font-semibold text-white text-3xl">Checkout</h1>
       </div>
+
       <form
         onSubmit={handleSubmit}
         className="max-w-5xl mx-auto p-6 flex flex-col md:flex-row gap-10"
       >
+        {/* --- Left Column: User Details --- */}
         <div className="w-full md:flex-1 bg-white rounded-lg p-8 space-y-4">
           <h2 className="text-2xl font-bold border-b pb-4">Your Details</h2>
           <div className="relative">
             <FaUser className="absolute top-1/2 left-4 -translate-y-1/2 text-gray-400" />
             <input
               type="text"
-              name="fullName"
               value={formData.fullName}
-              onChange={handleChange}
-              placeholder="Full Name"
-              className="w-full h-12 bg-gray-100 rounded-md pl-12 pr-4"
-              required
+              className="w-full h-12 bg-gray-200 rounded-md pl-12 pr-4 cursor-not-allowed"
+              readOnly
             />
           </div>
           <div className="relative">
             <FaEnvelope className="absolute top-1/2 left-4 -translate-y-1/2 text-gray-400" />
             <input
               type="email"
-              name="email"
               value={formData.email}
-              onChange={handleChange}
-              placeholder="Email"
-              className="w-full h-12 bg-gray-100 rounded-md pl-12 pr-4"
-              required
+              className="w-full h-12 bg-gray-200 rounded-md pl-12 pr-4 cursor-not-allowed"
+              readOnly
             />
           </div>
           <div className="relative">
@@ -212,6 +215,7 @@ const CheckOut = () => {
             ></textarea>
           </div>
         </div>
+        {/* --- Right Column: Order Summary --- */}
         <div className="w-full md:w-1/3 bg-white rounded-md shadow-2xl p-8 space-y-6">
           <h2 className="text-2xl font-bold border-b pb-4">Order Summary</h2>
           <div className="flex items-center gap-4">

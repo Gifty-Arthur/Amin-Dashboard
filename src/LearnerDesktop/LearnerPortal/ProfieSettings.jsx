@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../LeanersAccount/AuthContext";
-import { updateProfile } from "./ProfileService";
-import { FaVenusMars } from "react-icons/fa"; // 1. IMPORT an icon
+import { updateProfile } from "../CheckOut/enrollmentService";
+import { FaVenusMars } from "react-icons/fa";
 
 const ProfileSettings = () => {
   const { user, login } = useAuth();
@@ -14,9 +14,8 @@ const ProfileSettings = () => {
     contact: "",
     location: "",
     description: "",
-    gender: "", // 2. ADD 'gender' to state
-
-    disabled: false, // 1. ADD 'disabled' to state
+    gender: "",
+    disabled: false,
     currentPassword: "",
     newPassword: "",
     confirmNewPassword: "",
@@ -35,9 +34,8 @@ const ProfileSettings = () => {
         contact: user.contact || "",
         location: user.location || "",
         description: user.description || "",
-        disabled: user.disabled || false,
         gender: user.gender || "",
-
+        disabled: user.disabled || false,
         currentPassword: "",
         newPassword: "",
         confirmNewPassword: "",
@@ -67,21 +65,17 @@ const ProfileSettings = () => {
     setError("");
     setSuccess("");
 
-    // 2. ADD CLIENT-SIDE VALIDATION
     if (!formData.contact || !/^\+?[\d\s-()]+$/.test(formData.contact)) {
-      setError("Please enter a valid phone number.");
-      return;
+      return setError("Please enter a valid phone number.");
     }
     if (!formData.description) {
-      setError("Description is required.");
-      return;
+      return setError("Description is required.");
     }
     if (
       formData.newPassword &&
       formData.newPassword !== formData.confirmNewPassword
     ) {
-      setError("New passwords do not match.");
-      return;
+      return setError("New passwords do not match.");
     }
 
     setIsSubmitting(true);
@@ -92,9 +86,8 @@ const ProfileSettings = () => {
       submissionData.append("contact", formData.contact);
       submissionData.append("location", formData.location);
       submissionData.append("description", formData.description);
-      submissionData.append("gender", formData.gender); // 3. SEND 'gender' field
-
-      submissionData.append("disabled", formData.disabled); // 3. SEND 'disabled' field
+      submissionData.append("gender", formData.gender);
+      submissionData.append("disabled", formData.disabled);
 
       if (imageFile) {
         submissionData.append("image", imageFile);
@@ -106,7 +99,6 @@ const ProfileSettings = () => {
 
       const response = await updateProfile(submissionData);
 
-      // Update the user in the global context and localStorage
       login(response.user, localStorage.getItem("learnerToken"));
 
       setSuccess("Profile updated successfully!");
@@ -127,7 +119,7 @@ const ProfileSettings = () => {
       <h1 className="text-3xl font-bold mb-6">Profile Settings</h1>
       <form
         onSubmit={handleSubmit}
-        className="bg-white p-8 rounded-lg shadow-md space-y-6"
+        className="bg-white p-8 rounded-lg shadow-md space-y-8"
       >
         {success && (
           <div className="p-3 bg-green-100 text-green-800 rounded">

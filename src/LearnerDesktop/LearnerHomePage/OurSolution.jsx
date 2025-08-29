@@ -7,6 +7,7 @@ import HomeTitles from "../Title/HomeTitles";
 const OurSolution = () => {
   const [tracks, setTracks] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchTracks = async () => {
@@ -22,6 +23,9 @@ const OurSolution = () => {
     fetchTracks();
   }, []);
 
+  const handleTrackClick = () => {
+    navigate("/learner-tracks");
+  };
   return (
     <div className="mt-6 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 ">
       {loading ? (
@@ -43,7 +47,7 @@ const OurSolution = () => {
               tracks.slice(0, 4).map((track) => (
                 <div
                   key={track._id}
-                  onClick={() => handleTrackClick(track._id)}
+                  onClick={handleTrackClick}
                   className="group block cursor-pointer h-full"
                 >
                   {/* 4. ADDED FLEXBOX CLASSES FOR EQUAL HEIGHT */}

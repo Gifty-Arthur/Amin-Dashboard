@@ -1,5 +1,6 @@
 import React from "react";
 import bg1 from "../../assets/Leaners/bg1.png";
+import { useNavigate } from "react-router";
 import OurSolution from "./OurSolution";
 import HomeTitles from "../Title/HomeTitles";
 import h2 from "../../assets/Leaners/h2.png";
@@ -14,26 +15,26 @@ import s1 from "../../assets/Leaners/s1.png";
 import s2 from "../../assets/Leaners/s2.png";
 import c1 from "../../assets/Leaners/c1.png";
 import c2 from "../../assets/Leaners/c2.png";
-import c3 from "../../assets/Leaners/c3.png";
+import c3 from "../../assets/Images/Account/c3.png";
+import { CiGrid31 } from "react-icons/ci";
 
 const LearnerMain = () => {
   const [count, setCount] = useState(0);
   const [hasTriggered, setHasTriggered] = useState(false);
-  const ref = useRef(null); // Ref to attach to the element you want to watch
+  const ref = useRef(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    // Stop if the animation has already run or the element isn't ready
     if (!ref.current || hasTriggered) return;
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        // When the element is in view and animation hasn't run
         if (entry.isIntersecting && !hasTriggered) {
           setHasTriggered(true); // Mark as triggered so it won't run again
 
           let start = 0;
-          const end = 4; // The number you want to count up to
-          const duration = 1900; // Animation duration in milliseconds
+          const end = 4;
+          const duration = 1900;
           const startTime = Date.now();
 
           const step = () => {
@@ -64,13 +65,16 @@ const LearnerMain = () => {
         observer.unobserve(ref.current);
       }
     };
-  }, [hasTriggered]); // Dependency array
+  }, [hasTriggered]);
+
+  const handleGetStarted = () => {
+    navigate("/learner-tracks");
+  };
   return (
     <div>
       <div className="relative -mt-4">
         <img src={bg1} alt="" className="w-full object-contain" />
 
-        {/* This div positions the text over the image */}
         <div className="absolute inset-0 pt-30 px-20">
           <div>
             <h1 className="text-white text-3xl font-bold mt-10">
@@ -84,7 +88,10 @@ const LearnerMain = () => {
               <br /> expert-led courses are designed to empower <br />
               you to succeed."
             </p>
-            <button className="md:w-[137px] w-full h-[48px] font-semibold hover:text-primary  mt-4 bg-primary rounded-sm text-white hover:bg-[#E6EFF5] cursor-pointer">
+            <button
+              onClick={handleGetStarted}
+              className="md:w-[137px] w-full h-[48px] font-semibold hover:text-primary  mt-4 bg-primary rounded-sm text-white hover:bg-[#E6EFF5] cursor-pointer"
+            >
               Get Started
             </button>
           </div>
@@ -176,22 +183,8 @@ const LearnerMain = () => {
 
       {/* choose your Course */}
       <div className=" px-20 mt-20">
-        <div className="flex flex-row items-center justify-between ">
-          <div>
-            <div className="md:w-[508px] w-full h-[152px] border-l-4 rounded-md border-primary flex items-center justify-center  shadow-2xl bg-white">
-              <div className="flex flex-row items-center gap-10">
-                <TbLogin2 size={48} className=" text-primary " />
-                <div>
-                  <h1 className="text-black text-2xl font-bold">
-                    Sign Up and Choose Your Course
-                  </h1>
-                  <p>
-                    Create your account quickly with just your email <br />
-                    or social media login, then explore a wide range{" "}
-                  </p>
-                </div>
-              </div>
-            </div>
+        <div className="flex flex-row items-center justify-center gap-8">
+          <div className="flex flex-col gap-4">
             <div className="md:w-[508px] w-full h-[152px] rounded-lg mt-4 flex items-center justify-center  shadow-2xl bg-white">
               <div className="flex flex-row items-center gap-10">
                 <TbLogin2 size={48} className=" text-primary " />
@@ -205,7 +198,23 @@ const LearnerMain = () => {
                 </div>
               </div>
             </div>
-            <div className="md:w-[508px] w-full h-[152px] mt-10 rounded-lg flex items-center justify-center  shadow-2xl bg-white">
+            <div className="md:w-[508px] w-full h-[152px]  rounded-lg flex items-center justify-center  shadow-2xl bg-white">
+              <div className="flex flex-row items-center gap-10">
+                <TbLogin2 size={48} className=" text-primary " />
+                <div>
+                  <h1 className="text-black text-2xl font-bold">
+                    Start Learning{" "}
+                  </h1>
+                  <p>
+                    Start your learning journey with practical, hands-
+                    <br />
+                    on experience. Develop the skills needed to build
+                    <br /> implement, and manage effective solutions.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div className="md:w-[508px] w-full h-[152px]  rounded-lg flex items-center justify-center  shadow-2xl bg-white">
               <div className="flex flex-row items-center gap-10">
                 <TbLogin2 size={48} className=" text-primary " />
                 <div>
@@ -223,7 +232,7 @@ const LearnerMain = () => {
             </div>
           </div>
           {/* lo */}
-          <div className="rounded-md w-[508px] h-[616px] shadow-2xl bg-white  mb-10 ">
+          <div className="rounded-md w-[508px] h-[516px] shadow-2xl bg-white mt-6  mb-10 ">
             <div className="flex flex-row items-center justify-between p-4">
               <div>
                 <p className="text-center font-medium ">1</p>
@@ -243,27 +252,40 @@ const LearnerMain = () => {
               <p className="text-md font-medium text-center ">
                 Choose a Course
               </p>
-              <div className="flex flex-row items-center justify-center mt-4">
-                <div className="ml-6 md:w-[207px] h-[]120px bg-white shadow-2xl rounded-md">
-                  <img src={c1} alt="" className="mt-6 ml-2" />
-                  <h1 className="text-lg font-bold p-2">Software Developmet</h1>
-                  <p className="text-sm p-1">
+              <div className="flex flex-row items-center justify-center gap-6 mt-8 px-3">
+                <div className=" md:w-[127px] h-[120px] bg-white shadow-2xl rounded-md px-4 ">
+                  <img src={c1} alt="" className="w-[31px] h-[31px]" />
+                  <h1 className="text-[8px] font-bold mt-1 ">
+                    Software Developmet
+                  </h1>
+                  <p className="text-[7px] mt-1">
                     Unlock your potential with comprehensive training in modern
                     software development
                   </p>
-                  <p className="font-bold text-md mt-2 p-2">Price: $350</p>
+                  <p className="font-bold text-sm">Price: $350</p>
                 </div>
-                <div className="ml-6 md:w-[207px] h-[]120px bg-white shadow-2xl rounded-md">
-                  <img src={c2} alt="" className="mt-6 ml-2" />
-                  <h1 className="text-lg font-bold p-2">
-                    Data Science Mastery
+                <div className=" md:w-[127px] h-[120px] bg-white shadow-2xl rounded-md px-4 ">
+                  <img src={c3} alt="" className="w-[31px] h-[31px]" />
+                  <h1 className="text-[8px] font-bold mt-1 ">
+                    Cloud Computing
                   </h1>
-                  <p className="text-sm p-1">
-                    Equip yourself with the skills to analyze, interpret, and
-                    leverage data, becoming an expert.
+                  <p className="text-[7px] mt-1">
+                    Gain hands-on experience in cloud architecture, preparing
+                    you to manage scalable solutions.
                   </p>
-                  <p className="font-bold text-md mt-2 p-2">Price: $350</p>
+                  <p className="font-bold text-sm">Price: $350</p>
                 </div>
+                <div className=" md:w-[127px] h-[120px] bg-white shadow-2xl rounded-md px-4 ">
+                  <img src={c2} alt="" className="w-[31px] h-[31px]" />
+                  <h1 className="text-[8px] font-bold mt-1 ">Data Science</h1>
+                  <p className="text-[7px] mt-1">
+                    Gain hands-on experience in cloud architecture, preparing
+                    you to manage scalable solutions.
+                  </p>
+                  <p className="font-bold text-sm">Price: $350</p>
+                </div>
+
+                {/* data science */}
               </div>
             </div>
           </div>
